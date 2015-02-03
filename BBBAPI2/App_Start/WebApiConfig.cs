@@ -20,7 +20,7 @@ namespace BBBAPI2
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute("Authentication", "api/auth", new { controller = "authentication"});
+            config.Routes.MapHttpRoute("Authentication", "api/auth", new { controller = "users", action = "postauthenticate"});
 
            /* config.Routes.MapHttpRoute(
                 name: "DefaultApi",

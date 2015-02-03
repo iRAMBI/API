@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -197,15 +198,59 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\JSONResponderClass.cs" />
+    <Compile Include="Controllers\TokenGenerator.cs" />
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\BBBModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BBBModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BBBModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BBBModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BBBModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Comment.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Course.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\CourseSection.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Faculty.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\News.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Program.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Set.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\User.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\UserCourseSection.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -239,6 +284,23 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <EntityDeploy Include="Models\BBBModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BBBModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\BBBModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BBBModel.edmx</DependentUpon>
+      <LastGenOutput>BBBModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\BBBModel.edmx.diagram">
+      <DependentUpon>BBBModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\BBBModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BBBModel.edmx</DependentUpon>
+      <LastGenOutput>BBBModel.cs</LastGenOutput>
+    </Content>
     <None Include="Properties\PublishProfiles\api.thunderchicken.ca.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -277,6 +339,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
