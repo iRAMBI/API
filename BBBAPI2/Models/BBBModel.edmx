@@ -4,14 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BBBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="irambidbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="commentid" />
           </Key>
           <Property Name="commentid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="newsid" Type="int" Nullable="false" />
-          <Property Name="userid" Type="int" Nullable="false" />
+          <Property Name="userid" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="datetime" Type="datetime" Nullable="false" />
           <Property Name="content" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
@@ -20,7 +20,7 @@
             <PropertyRef Name="courseid" />
           </Key>
           <Property Name="courseid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="userid" Type="int" Nullable="false" />
+          <Property Name="facultyid" Type="int" Nullable="false" />
           <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="term" Type="nvarchar" MaxLength="50" />
           <Property Name="description" Type="nchar" MaxLength="10" />
@@ -46,11 +46,14 @@
             <PropertyRef Name="newsid" />
           </Key>
           <Property Name="newsid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="userid" Type="int" Nullable="false" />
+          <Property Name="userid" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="programid" Type="int" Nullable="false" />
+          <Property Name="coursesectionid" Type="int" Nullable="false" />
           <Property Name="datetime" Type="datetime" Nullable="false" />
           <Property Name="title" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="content" Type="nvarchar(max)" />
           <Property Name="priority" Type="nvarchar" MaxLength="50" />
+          <Property Name="expirydate" Type="datetime" Nullable="false" />
           <Property Name="active" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Program">
@@ -58,7 +61,7 @@
             <PropertyRef Name="programid" />
           </Key>
           <Property Name="programid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="facultyid" Type="int" />
+          <Property Name="facultyid" Type="int" Nullable="false" />
           <Property Name="programname" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Set">
@@ -69,15 +72,32 @@
           <Property Name="programid" Type="int" Nullable="false" />
           <Property Name="setname" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="facultyid" />
+            <PropertyRef Name="userid" />
+          </Key>
+          <Property Name="facultyid" Type="int" Nullable="false" />
+          <Property Name="userid" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="position" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="alternateemail" Type="nvarchar" MaxLength="50" />
+          <Property Name="officelocation" Type="nvarchar" MaxLength="50" />
+          <Property Name="ohmonday" Type="nvarchar" MaxLength="50" />
+          <Property Name="ohtuesday" Type="nvarchar" MaxLength="50" />
+          <Property Name="ohwednesday" Type="nvarchar" MaxLength="50" />
+          <Property Name="ohthursday" Type="nvarchar" MaxLength="50" />
+          <Property Name="ohfriday" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="userid" />
           </Key>
-          <Property Name="userid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="programid" Type="int" Nullable="false" />
-          <Property Name="setid" Type="int" Nullable="false" />
-          <Property Name="facultyid" Type="int" Nullable="false" />
+          <Property Name="userid" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="programid" Type="int" />
+          <Property Name="setid" Type="int" />
           <Property Name="password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="firstname" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="lastname" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="type" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="active" Type="bit" Nullable="false" />
@@ -87,9 +107,10 @@
         <EntityType Name="UserCourseSection">
           <Key>
             <PropertyRef Name="coursesectionid" />
+            <PropertyRef Name="userid" />
           </Key>
           <Property Name="coursesectionid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="userid" Type="int" Nullable="false" />
+          <Property Name="userid" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="role" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comment_ToNews">
@@ -116,15 +137,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Course_ToUser">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
+        <Association Name="FK_Course_ToFaculty">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
           <End Role="Course" Type="Self.Course" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="userid" />
+            <Principal Role="Faculty">
+              <PropertyRef Name="facultyid" />
             </Principal>
             <Dependent Role="Course">
-              <PropertyRef Name="userid" />
+              <PropertyRef Name="facultyid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -140,6 +161,54 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_News_ToCourseSection">
+          <End Role="CourseSection" Type="Self.CourseSection" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseSection">
+              <PropertyRef Name="coursesectionid" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="coursesectionid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_News_ToProgram">
+          <End Role="Program" Type="Self.Program" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Program">
+              <PropertyRef Name="programid" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="programid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_News_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userid" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Program_ToFaculty">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
+          <End Role="Program" Type="Self.Program" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Faculty">
+              <PropertyRef Name="facultyid" />
+            </Principal>
+            <Dependent Role="Program">
+              <PropertyRef Name="facultyid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Set_ToProgram">
           <End Role="Program" Type="Self.Program" Multiplicity="1" />
           <End Role="Set" Type="Self.Set" Multiplicity="*" />
@@ -152,32 +221,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Table_ToUser">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
-          <End Role="UserCourseSection" Type="Self.UserCourseSection" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="userid" />
-            </Principal>
-            <Dependent Role="UserCourseSection">
-              <PropertyRef Name="userid" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_User_ToFaculty">
+        <Association Name="FK_Teacher_ToFaculty">
           <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Faculty">
               <PropertyRef Name="facultyid" />
             </Principal>
-            <Dependent Role="User">
+            <Dependent Role="Teacher">
               <PropertyRef Name="facultyid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Teacher_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userid" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_User_ToProgram">
-          <End Role="Program" Type="Self.Program" Multiplicity="1" />
+          <End Role="Program" Type="Self.Program" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Program">
@@ -189,7 +258,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_User_ToSet">
-          <End Role="Set" Type="Self.Set" Multiplicity="1" />
+          <End Role="Set" Type="Self.Set" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Set">
@@ -200,7 +269,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="BBBModelStoreContainer">
+        <Association Name="FK_UserCourseSection_ToCourseSection">
+          <End Role="CourseSection" Type="Self.CourseSection" Multiplicity="1" />
+          <End Role="UserCourseSection" Type="Self.UserCourseSection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseSection">
+              <PropertyRef Name="coursesectionid" />
+            </Principal>
+            <Dependent Role="UserCourseSection">
+              <PropertyRef Name="coursesectionid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCourseSection_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="UserCourseSection" Type="Self.UserCourseSection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userid" />
+            </Principal>
+            <Dependent Role="UserCourseSection">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="irambidbModelStoreContainer">
           <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CourseSection" EntityType="Self.CourseSection" Schema="dbo" store:Type="Tables" />
@@ -208,6 +301,7 @@
           <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Program" EntityType="Self.Program" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Set" EntityType="Self.Set" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Teacher" EntityType="Self.Teacher" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserCourseSection" EntityType="Self.UserCourseSection" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Comment_ToNews" Association="Self.FK_Comment_ToNews">
@@ -218,25 +312,41 @@
             <End Role="User" EntitySet="User" />
             <End Role="Comment" EntitySet="Comment" />
           </AssociationSet>
-          <AssociationSet Name="FK_Course_ToUser" Association="Self.FK_Course_ToUser">
-            <End Role="User" EntitySet="User" />
+          <AssociationSet Name="FK_Course_ToFaculty" Association="Self.FK_Course_ToFaculty">
+            <End Role="Faculty" EntitySet="Faculty" />
             <End Role="Course" EntitySet="Course" />
           </AssociationSet>
           <AssociationSet Name="FK_CourseSection_ToCourse" Association="Self.FK_CourseSection_ToCourse">
             <End Role="Course" EntitySet="Course" />
             <End Role="CourseSection" EntitySet="CourseSection" />
           </AssociationSet>
+          <AssociationSet Name="FK_News_ToCourseSection" Association="Self.FK_News_ToCourseSection">
+            <End Role="CourseSection" EntitySet="CourseSection" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_News_ToProgram" Association="Self.FK_News_ToProgram">
+            <End Role="Program" EntitySet="Program" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_News_ToUser" Association="Self.FK_News_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Program_ToFaculty" Association="Self.FK_Program_ToFaculty">
+            <End Role="Faculty" EntitySet="Faculty" />
+            <End Role="Program" EntitySet="Program" />
+          </AssociationSet>
           <AssociationSet Name="FK_Set_ToProgram" Association="Self.FK_Set_ToProgram">
             <End Role="Program" EntitySet="Program" />
             <End Role="Set" EntitySet="Set" />
           </AssociationSet>
-          <AssociationSet Name="FK_Table_ToUser" Association="Self.FK_Table_ToUser">
-            <End Role="User" EntitySet="User" />
-            <End Role="UserCourseSection" EntitySet="UserCourseSection" />
-          </AssociationSet>
-          <AssociationSet Name="FK_User_ToFaculty" Association="Self.FK_User_ToFaculty">
+          <AssociationSet Name="FK_Teacher_ToFaculty" Association="Self.FK_Teacher_ToFaculty">
             <End Role="Faculty" EntitySet="Faculty" />
+            <End Role="Teacher" EntitySet="Teacher" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teacher_ToUser" Association="Self.FK_Teacher_ToUser">
             <End Role="User" EntitySet="User" />
+            <End Role="Teacher" EntitySet="Teacher" />
           </AssociationSet>
           <AssociationSet Name="FK_User_ToProgram" Association="Self.FK_User_ToProgram">
             <End Role="Program" EntitySet="Program" />
@@ -246,19 +356,27 @@
             <End Role="Set" EntitySet="Set" />
             <End Role="User" EntitySet="User" />
           </AssociationSet>
+          <AssociationSet Name="FK_UserCourseSection_ToCourseSection" Association="Self.FK_UserCourseSection_ToCourseSection">
+            <End Role="CourseSection" EntitySet="CourseSection" />
+            <End Role="UserCourseSection" EntitySet="UserCourseSection" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCourseSection_ToUser" Association="Self.FK_UserCourseSection_ToUser">
+            <End Role="User" EntitySet="User" />
+            <End Role="UserCourseSection" EntitySet="UserCourseSection" />
+          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
-      <Schema Namespace="BBBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+      <Schema Namespace="irambidbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="commentid" />
           </Key>
           <Property Name="commentid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="newsid" Type="Int32" Nullable="false" />
-          <Property Name="userid" Type="Int32" Nullable="false" />
+          <Property Name="userid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="datetime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="News" Relationship="Self.FK_Comment_ToNews" FromRole="Comment" ToRole="News" />
@@ -269,11 +387,11 @@
             <PropertyRef Name="courseid" />
           </Key>
           <Property Name="courseid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="userid" Type="Int32" Nullable="false" />
+          <Property Name="facultyid" Type="Int32" Nullable="false" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="term" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="description" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Course_ToUser" FromRole="Course" ToRole="User" />
+          <NavigationProperty Name="Faculty" Relationship="Self.FK_Course_ToFaculty" FromRole="Course" ToRole="Faculty" />
           <NavigationProperty Name="CourseSections" Relationship="Self.FK_CourseSection_ToCourse" FromRole="Course" ToRole="CourseSection" />
         </EntityType>
         <EntityType Name="CourseSection">
@@ -285,6 +403,8 @@
           <Property Name="datetimestart" Type="DateTime" Precision="3" />
           <Property Name="datetimeend" Type="DateTime" Precision="3" />
           <NavigationProperty Name="Course" Relationship="Self.FK_CourseSection_ToCourse" FromRole="CourseSection" ToRole="Course" />
+          <NavigationProperty Name="News" Relationship="Self.FK_News_ToCourseSection" FromRole="CourseSection" ToRole="News" />
+          <NavigationProperty Name="UserCourseSections" Relationship="Self.FK_UserCourseSection_ToCourseSection" FromRole="CourseSection" ToRole="UserCourseSection" />
         </EntityType>
         <EntityType Name="Faculty">
           <Key>
@@ -292,28 +412,38 @@
           </Key>
           <Property Name="facultyid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="facultyname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Users" Relationship="Self.FK_User_ToFaculty" FromRole="Faculty" ToRole="User" />
+          <NavigationProperty Name="Courses" Relationship="Self.FK_Course_ToFaculty" FromRole="Faculty" ToRole="Course" />
+          <NavigationProperty Name="Programs" Relationship="Self.FK_Program_ToFaculty" FromRole="Faculty" ToRole="Program" />
+          <NavigationProperty Name="Teachers" Relationship="Self.FK_Teacher_ToFaculty" FromRole="Faculty" ToRole="Teacher" />
         </EntityType>
         <EntityType Name="News">
           <Key>
             <PropertyRef Name="newsid" />
           </Key>
           <Property Name="newsid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="userid" Type="Int32" Nullable="false" />
+          <Property Name="userid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="programid" Type="Int32" Nullable="false" />
+          <Property Name="coursesectionid" Type="Int32" Nullable="false" />
           <Property Name="datetime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="priority" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="expirydate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="active" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_ToNews" FromRole="News" ToRole="Comment" />
+          <NavigationProperty Name="CourseSection" Relationship="Self.FK_News_ToCourseSection" FromRole="News" ToRole="CourseSection" />
+          <NavigationProperty Name="Program" Relationship="Self.FK_News_ToProgram" FromRole="News" ToRole="Program" />
+          <NavigationProperty Name="User" Relationship="Self.FK_News_ToUser" FromRole="News" ToRole="User" />
         </EntityType>
         <EntityType Name="Program">
           <Key>
             <PropertyRef Name="programid" />
           </Key>
           <Property Name="programid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="facultyid" Type="Int32" />
+          <Property Name="facultyid" Type="Int32" Nullable="false" />
           <Property Name="programname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Faculty" Relationship="Self.FK_Program_ToFaculty" FromRole="Program" ToRole="Faculty" />
+          <NavigationProperty Name="News" Relationship="Self.FK_News_ToProgram" FromRole="Program" ToRole="News" />
           <NavigationProperty Name="Sets" Relationship="Self.FK_Set_ToProgram" FromRole="Program" ToRole="Set" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_ToProgram" FromRole="Program" ToRole="User" />
         </EntityType>
@@ -327,35 +457,56 @@
           <NavigationProperty Name="Program" Relationship="Self.FK_Set_ToProgram" FromRole="Set" ToRole="Program" />
           <NavigationProperty Name="Users" Relationship="Self.FK_User_ToSet" FromRole="Set" ToRole="User" />
         </EntityType>
+        <EntityType Name="Teacher">
+          <Key>
+            <PropertyRef Name="facultyid" />
+            <PropertyRef Name="userid" />
+          </Key>
+          <Property Name="facultyid" Type="Int32" Nullable="false" />
+          <Property Name="userid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="position" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="alternateemail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="officelocation" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ohmonday" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ohtuesday" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ohwednesday" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ohthursday" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ohfriday" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Faculty" Relationship="Self.FK_Teacher_ToFaculty" FromRole="Teacher" ToRole="Faculty" />
+          <NavigationProperty Name="User" Relationship="Self.FK_Teacher_ToUser" FromRole="Teacher" ToRole="User" />
+        </EntityType>
         <EntityType Name="User">
           <Key>
             <PropertyRef Name="userid" />
           </Key>
-          <Property Name="userid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="programid" Type="Int32" Nullable="false" />
-          <Property Name="setid" Type="Int32" Nullable="false" />
-          <Property Name="facultyid" Type="Int32" Nullable="false" />
+          <Property Name="userid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="programid" Type="Int32" />
+          <Property Name="setid" Type="Int32" />
           <Property Name="password" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="firstname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="lastname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="active" Type="Boolean" Nullable="false" />
           <Property Name="phonenumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="token" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Comments" Relationship="Self.FK_Comment_ToUser" FromRole="User" ToRole="Comment" />
-          <NavigationProperty Name="Courses" Relationship="Self.FK_Course_ToUser" FromRole="User" ToRole="Course" />
-          <NavigationProperty Name="Faculty" Relationship="Self.FK_User_ToFaculty" FromRole="User" ToRole="Faculty" />
+          <NavigationProperty Name="News" Relationship="Self.FK_News_ToUser" FromRole="User" ToRole="News" />
           <NavigationProperty Name="Program" Relationship="Self.FK_User_ToProgram" FromRole="User" ToRole="Program" />
           <NavigationProperty Name="Set" Relationship="Self.FK_User_ToSet" FromRole="User" ToRole="Set" />
-          <NavigationProperty Name="UserCourseSections" Relationship="Self.FK_Table_ToUser" FromRole="User" ToRole="UserCourseSection" />
+          <NavigationProperty Name="Teachers" Relationship="Self.FK_Teacher_ToUser" FromRole="User" ToRole="Teacher" />
+          <NavigationProperty Name="UserCourseSections" Relationship="Self.FK_UserCourseSection_ToUser" FromRole="User" ToRole="UserCourseSection" />
         </EntityType>
         <EntityType Name="UserCourseSection">
           <Key>
             <PropertyRef Name="coursesectionid" />
+            <PropertyRef Name="userid" />
           </Key>
           <Property Name="coursesectionid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="userid" Type="Int32" Nullable="false" />
+          <Property Name="userid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="User" Relationship="Self.FK_Table_ToUser" FromRole="UserCourseSection" ToRole="User" />
+          <NavigationProperty Name="CourseSection" Relationship="Self.FK_UserCourseSection_ToCourseSection" FromRole="UserCourseSection" ToRole="CourseSection" />
+          <NavigationProperty Name="User" Relationship="Self.FK_UserCourseSection_ToUser" FromRole="UserCourseSection" ToRole="User" />
         </EntityType>
         <Association Name="FK_Comment_ToNews">
           <End Role="News" Type="Self.News" Multiplicity="1" />
@@ -381,15 +532,15 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Course_ToUser">
-          <End Role="User" Type="Self.User" Multiplicity="1" />
+        <Association Name="FK_Course_ToFaculty">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
           <End Role="Course" Type="Self.Course" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="userid" />
+            <Principal Role="Faculty">
+              <PropertyRef Name="facultyid" />
             </Principal>
             <Dependent Role="Course">
-              <PropertyRef Name="userid" />
+              <PropertyRef Name="facultyid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -405,15 +556,75 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_User_ToFaculty">
+        <Association Name="FK_News_ToCourseSection">
+          <End Role="CourseSection" Type="Self.CourseSection" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseSection">
+              <PropertyRef Name="coursesectionid" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="coursesectionid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCourseSection_ToCourseSection">
+          <End Role="CourseSection" Type="Self.CourseSection" Multiplicity="1" />
+          <End Role="UserCourseSection" Type="Self.UserCourseSection" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CourseSection">
+              <PropertyRef Name="coursesectionid" />
+            </Principal>
+            <Dependent Role="UserCourseSection">
+              <PropertyRef Name="coursesectionid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Program_ToFaculty">
           <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
-          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <End Role="Program" Type="Self.Program" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Faculty">
               <PropertyRef Name="facultyid" />
             </Principal>
-            <Dependent Role="User">
+            <Dependent Role="Program">
               <PropertyRef Name="facultyid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Teacher_ToFaculty">
+          <End Role="Faculty" Type="Self.Faculty" Multiplicity="1" />
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Faculty">
+              <PropertyRef Name="facultyid" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="facultyid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_News_ToProgram">
+          <End Role="Program" Type="Self.Program" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Program">
+              <PropertyRef Name="programid" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="programid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_News_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="News" Type="Self.News" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userid" />
+            </Principal>
+            <Dependent Role="News">
+              <PropertyRef Name="userid" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -430,7 +641,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_User_ToProgram">
-          <End Role="Program" Type="Self.Program" Multiplicity="1" />
+          <End Role="Program" Type="Self.Program" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Program">
@@ -442,7 +653,7 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_User_ToSet">
-          <End Role="Set" Type="Self.Set" Multiplicity="1" />
+          <End Role="Set" Type="Self.Set" Multiplicity="0..1" />
           <End Role="User" Type="Self.User" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Set">
@@ -453,7 +664,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Table_ToUser">
+        <Association Name="FK_Teacher_ToUser">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Teacher" Type="Self.Teacher" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="userid" />
+            </Principal>
+            <Dependent Role="Teacher">
+              <PropertyRef Name="userid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserCourseSection_ToUser">
           <End Role="User" Type="Self.User" Multiplicity="1" />
           <End Role="UserCourseSection" Type="Self.UserCourseSection" Multiplicity="*" />
           <ReferentialConstraint>
@@ -465,7 +688,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityContainer Name="BBBEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="irambidbEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Comments" EntityType="Self.Comment" />
           <EntitySet Name="Courses" EntityType="Self.Course" />
           <EntitySet Name="CourseSections" EntityType="Self.CourseSection" />
@@ -473,6 +696,7 @@
           <EntitySet Name="News" EntityType="Self.News" />
           <EntitySet Name="Programs" EntityType="Self.Program" />
           <EntitySet Name="Sets" EntityType="Self.Set" />
+          <EntitySet Name="Teachers" EntityType="Self.Teacher" />
           <EntitySet Name="Users" EntityType="Self.User" />
           <EntitySet Name="UserCourseSections" EntityType="Self.UserCourseSection" />
           <AssociationSet Name="FK_Comment_ToNews" Association="Self.FK_Comment_ToNews">
@@ -483,17 +707,37 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Comment" EntitySet="Comments" />
           </AssociationSet>
-          <AssociationSet Name="FK_Course_ToUser" Association="Self.FK_Course_ToUser">
-            <End Role="User" EntitySet="Users" />
+          <AssociationSet Name="FK_Course_ToFaculty" Association="Self.FK_Course_ToFaculty">
+            <End Role="Faculty" EntitySet="Faculties" />
             <End Role="Course" EntitySet="Courses" />
           </AssociationSet>
           <AssociationSet Name="FK_CourseSection_ToCourse" Association="Self.FK_CourseSection_ToCourse">
             <End Role="Course" EntitySet="Courses" />
             <End Role="CourseSection" EntitySet="CourseSections" />
           </AssociationSet>
-          <AssociationSet Name="FK_User_ToFaculty" Association="Self.FK_User_ToFaculty">
+          <AssociationSet Name="FK_News_ToCourseSection" Association="Self.FK_News_ToCourseSection">
+            <End Role="CourseSection" EntitySet="CourseSections" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCourseSection_ToCourseSection" Association="Self.FK_UserCourseSection_ToCourseSection">
+            <End Role="CourseSection" EntitySet="CourseSections" />
+            <End Role="UserCourseSection" EntitySet="UserCourseSections" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Program_ToFaculty" Association="Self.FK_Program_ToFaculty">
             <End Role="Faculty" EntitySet="Faculties" />
+            <End Role="Program" EntitySet="Programs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Teacher_ToFaculty" Association="Self.FK_Teacher_ToFaculty">
+            <End Role="Faculty" EntitySet="Faculties" />
+            <End Role="Teacher" EntitySet="Teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_News_ToProgram" Association="Self.FK_News_ToProgram">
+            <End Role="Program" EntitySet="Programs" />
+            <End Role="News" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_News_ToUser" Association="Self.FK_News_ToUser">
             <End Role="User" EntitySet="Users" />
+            <End Role="News" EntitySet="News" />
           </AssociationSet>
           <AssociationSet Name="FK_Set_ToProgram" Association="Self.FK_Set_ToProgram">
             <End Role="Program" EntitySet="Programs" />
@@ -507,7 +751,11 @@
             <End Role="Set" EntitySet="Sets" />
             <End Role="User" EntitySet="Users" />
           </AssociationSet>
-          <AssociationSet Name="FK_Table_ToUser" Association="Self.FK_Table_ToUser">
+          <AssociationSet Name="FK_Teacher_ToUser" Association="Self.FK_Teacher_ToUser">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Teacher" EntitySet="Teachers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserCourseSection_ToUser" Association="Self.FK_UserCourseSection_ToUser">
             <End Role="User" EntitySet="Users" />
             <End Role="UserCourseSection" EntitySet="UserCourseSections" />
           </AssociationSet>
@@ -517,9 +765,9 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="BBBModelStoreContainer" CdmEntityContainer="BBBEntities">
+        <EntityContainerMapping StorageEntityContainer="irambidbModelStoreContainer" CdmEntityContainer="irambidbEntities">
           <EntitySetMapping Name="Comments">
-            <EntityTypeMapping TypeName="BBBModel.Comment">
+            <EntityTypeMapping TypeName="irambidbModel.Comment">
               <MappingFragment StoreEntitySet="Comment">
                 <ScalarProperty Name="commentid" ColumnName="commentid" />
                 <ScalarProperty Name="newsid" ColumnName="newsid" />
@@ -530,10 +778,10 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Courses">
-            <EntityTypeMapping TypeName="BBBModel.Course">
+            <EntityTypeMapping TypeName="irambidbModel.Course">
               <MappingFragment StoreEntitySet="Course">
                 <ScalarProperty Name="courseid" ColumnName="courseid" />
-                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="facultyid" ColumnName="facultyid" />
                 <ScalarProperty Name="name" ColumnName="name" />
                 <ScalarProperty Name="term" ColumnName="term" />
                 <ScalarProperty Name="description" ColumnName="description" />
@@ -541,7 +789,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="CourseSections">
-            <EntityTypeMapping TypeName="BBBModel.CourseSection">
+            <EntityTypeMapping TypeName="irambidbModel.CourseSection">
               <MappingFragment StoreEntitySet="CourseSection">
                 <ScalarProperty Name="coursesectionid" ColumnName="coursesectionid" />
                 <ScalarProperty Name="courseid" ColumnName="courseid" />
@@ -551,7 +799,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Faculties">
-            <EntityTypeMapping TypeName="BBBModel.Faculty">
+            <EntityTypeMapping TypeName="irambidbModel.Faculty">
               <MappingFragment StoreEntitySet="Faculty">
                 <ScalarProperty Name="facultyid" ColumnName="facultyid" />
                 <ScalarProperty Name="facultyname" ColumnName="facultyname" />
@@ -559,20 +807,23 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="News">
-            <EntityTypeMapping TypeName="BBBModel.News">
+            <EntityTypeMapping TypeName="irambidbModel.News">
               <MappingFragment StoreEntitySet="News">
                 <ScalarProperty Name="newsid" ColumnName="newsid" />
                 <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="programid" ColumnName="programid" />
+                <ScalarProperty Name="coursesectionid" ColumnName="coursesectionid" />
                 <ScalarProperty Name="datetime" ColumnName="datetime" />
                 <ScalarProperty Name="title" ColumnName="title" />
                 <ScalarProperty Name="content" ColumnName="content" />
                 <ScalarProperty Name="priority" ColumnName="priority" />
+                <ScalarProperty Name="expirydate" ColumnName="expirydate" />
                 <ScalarProperty Name="active" ColumnName="active" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Programs">
-            <EntityTypeMapping TypeName="BBBModel.Program">
+            <EntityTypeMapping TypeName="irambidbModel.Program">
               <MappingFragment StoreEntitySet="Program">
                 <ScalarProperty Name="programid" ColumnName="programid" />
                 <ScalarProperty Name="facultyid" ColumnName="facultyid" />
@@ -581,7 +832,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Sets">
-            <EntityTypeMapping TypeName="BBBModel.Set">
+            <EntityTypeMapping TypeName="irambidbModel.Set">
               <MappingFragment StoreEntitySet="Set">
                 <ScalarProperty Name="setid" ColumnName="setid" />
                 <ScalarProperty Name="programid" ColumnName="programid" />
@@ -589,14 +840,31 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="Teachers">
+            <EntityTypeMapping TypeName="irambidbModel.Teacher">
+              <MappingFragment StoreEntitySet="Teacher">
+                <ScalarProperty Name="facultyid" ColumnName="facultyid" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="alternateemail" ColumnName="alternateemail" />
+                <ScalarProperty Name="officelocation" ColumnName="officelocation" />
+                <ScalarProperty Name="ohmonday" ColumnName="ohmonday" />
+                <ScalarProperty Name="ohtuesday" ColumnName="ohtuesday" />
+                <ScalarProperty Name="ohwednesday" ColumnName="ohwednesday" />
+                <ScalarProperty Name="ohthursday" ColumnName="ohthursday" />
+                <ScalarProperty Name="ohfriday" ColumnName="ohfriday" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Users">
-            <EntityTypeMapping TypeName="BBBModel.User">
+            <EntityTypeMapping TypeName="irambidbModel.User">
               <MappingFragment StoreEntitySet="User">
                 <ScalarProperty Name="userid" ColumnName="userid" />
                 <ScalarProperty Name="programid" ColumnName="programid" />
                 <ScalarProperty Name="setid" ColumnName="setid" />
-                <ScalarProperty Name="facultyid" ColumnName="facultyid" />
                 <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
                 <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="type" ColumnName="type" />
                 <ScalarProperty Name="active" ColumnName="active" />
@@ -606,7 +874,7 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="UserCourseSections">
-            <EntityTypeMapping TypeName="BBBModel.UserCourseSection">
+            <EntityTypeMapping TypeName="irambidbModel.UserCourseSection">
               <MappingFragment StoreEntitySet="UserCourseSection">
                 <ScalarProperty Name="coursesectionid" ColumnName="coursesectionid" />
                 <ScalarProperty Name="userid" ColumnName="userid" />

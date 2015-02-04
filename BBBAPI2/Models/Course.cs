@@ -20,12 +20,12 @@ namespace BBBAPI2.Models
         }
     
         public int courseid { get; set; }
-        public int userid { get; set; }
+        public int facultyid { get; set; }
         public string name { get; set; }
         public string term { get; set; }
         public string description { get; set; }
     
-        public virtual User User { get; set; }
+        public virtual Faculty Faculty { get; set; }
         public virtual ICollection<CourseSection> CourseSections { get; set; }
     }
 }

@@ -245,6 +245,9 @@
     <Compile Include="Models\Set.cs">
       <DependentUpon>BBBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Teacher.cs">
+      <DependentUpon>BBBModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>BBBModel.tt</DependentUpon>
     </Compile>

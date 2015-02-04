@@ -14,11 +14,19 @@ namespace BBBAPI2.Models
     
     public partial class CourseSection
     {
+        public CourseSection()
+        {
+            this.News = new HashSet<News>();
+            this.UserCourseSections = new HashSet<UserCourseSection>();
+        }
+    
         public int coursesectionid { get; set; }
         public int courseid { get; set; }
         public Nullable<System.DateTime> datetimestart { get; set; }
         public Nullable<System.DateTime> datetimeend { get; set; }
     
         public virtual Course Course { get; set; }
+        public virtual ICollection<News> News { get; set; }
+        public virtual ICollection<UserCourseSection> UserCourseSections { get; set; }
     }
 }

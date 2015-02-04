@@ -12,22 +12,20 @@ namespace BBBAPI2.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Program
+    public partial class Teacher
     {
-        public Program()
-        {
-            this.News = new HashSet<News>();
-            this.Sets = new HashSet<Set>();
-            this.Users = new HashSet<User>();
-        }
-    
-        public int programid { get; set; }
         public int facultyid { get; set; }
-        public string programname { get; set; }
+        public string userid { get; set; }
+        public string position { get; set; }
+        public string alternateemail { get; set; }
+        public string officelocation { get; set; }
+        public string ohmonday { get; set; }
+        public string ohtuesday { get; set; }
+        public string ohwednesday { get; set; }
+        public string ohthursday { get; set; }
+        public string ohfriday { get; set; }
     
         public virtual Faculty Faculty { get; set; }
-        public virtual ICollection<News> News { get; set; }
-        public virtual ICollection<Set> Sets { get; set; }
-        public virtual ICollection<User> Users { get; set; }
+        public virtual User User { get; set; }
     }
 }

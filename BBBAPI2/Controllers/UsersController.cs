@@ -16,7 +16,7 @@ namespace BBBAPI2.Controllers
 {
     public class UsersController : ApiController
     {
-        private BBBEntities db = new BBBEntities();
+        private irambidbEntities db = new irambidbEntities();
 
         // GET: api/Users
         public IQueryable<User> GetUsers()
@@ -38,7 +38,7 @@ namespace BBBAPI2.Controllers
         }
 
         // PUT: api/Users/5
-        [ResponseType(typeof(void))]
+       /* [ResponseType(typeof(void))]
         public IHttpActionResult PutUser(int id, User user)
         {
             if (!ModelState.IsValid)
@@ -70,7 +70,7 @@ namespace BBBAPI2.Controllers
             }
 
             return StatusCode(HttpStatusCode.NoContent);
-        }
+        }*/
 /*
         // POST: api/Users
         [ResponseType(typeof(User))]
@@ -128,8 +128,10 @@ namespace BBBAPI2.Controllers
                 {
                     statuscode = 200,
                     message = "Authentication Successful",
-                    data = newToken
+                    data = JObject.Parse("{ 'token': '" + newToken + "' }")
                 };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
             }
             /*if (!ModelState.IsValid)
             {
@@ -141,8 +143,8 @@ namespace BBBAPI2.Controllers
 
             return CreatedAtRoute("DefaultApi", new { id = user.userid }, user);*/
             
-            string json = JsonConvert.SerializeObject(user);
-            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, json));
+            //string json = JsonConvert.SerializeObject(user);
+            
         }
 
 
@@ -171,9 +173,9 @@ namespace BBBAPI2.Controllers
             base.Dispose(disposing);
         }
 
-        private bool UserExists(int id)
+       /* private bool UserExists(int id)
         {
             return db.Users.Count(e => e.userid == id) > 0;
-        }
+        }*/
     }
 }

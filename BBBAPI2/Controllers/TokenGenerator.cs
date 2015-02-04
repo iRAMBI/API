@@ -8,7 +8,7 @@ namespace BBBAPI2.Controllers
 {
     public class TokenGenerator
     {
-        private static const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        private const string valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 
         public static string CreateToken(int length)
         {

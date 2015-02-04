@@ -15,9 +15,10 @@ namespace BBBAPI2.Models
     public partial class UserCourseSection
     {
         public int coursesectionid { get; set; }
-        public int userid { get; set; }
+        public string userid { get; set; }
         public string role { get; set; }
     
+        public virtual CourseSection CourseSection { get; set; }
         public virtual User User { get; set; }
     }
 }

@@ -13,10 +13,10 @@ namespace BBBAPI2.Models
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class BBBEntities : DbContext
+    public partial class irambidbEntities : DbContext
     {
-        public BBBEntities()
-            : base("name=BBBEntities")
+        public irambidbEntities()
+            : base("name=irambidbEntities")
         {
         }
     
@@ -32,6 +32,7 @@ namespace BBBAPI2.Models
         public virtual DbSet<News> News { get; set; }
         public virtual DbSet<Program> Programs { get; set; }
         public virtual DbSet<Set> Sets { get; set; }
+        public virtual DbSet<Teacher> Teachers { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserCourseSection> UserCourseSections { get; set; }
     }

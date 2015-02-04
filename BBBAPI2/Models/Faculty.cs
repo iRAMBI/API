@@ -16,12 +16,16 @@ namespace BBBAPI2.Models
     {
         public Faculty()
         {
-            this.Users = new HashSet<User>();
+            this.Courses = new HashSet<Course>();
+            this.Programs = new HashSet<Program>();
+            this.Teachers = new HashSet<Teacher>();
         }
     
         public int facultyid { get; set; }
         public string facultyname { get; set; }
     
-        public virtual ICollection<User> Users { get; set; }
+        public virtual ICollection<Course> Courses { get; set; }
+        public virtual ICollection<Program> Programs { get; set; }
+        public virtual ICollection<Teacher> Teachers { get; set; }
     }
 }

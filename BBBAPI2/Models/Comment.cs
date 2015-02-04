@@ -16,7 +16,7 @@ namespace BBBAPI2.Models
     {
         public int commentid { get; set; }
         public int newsid { get; set; }
-        public int userid { get; set; }
+        public string userid { get; set; }
         public System.DateTime datetime { get; set; }
         public string content { get; set; }
     

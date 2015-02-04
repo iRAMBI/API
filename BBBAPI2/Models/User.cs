@@ -17,15 +17,17 @@ namespace BBBAPI2.Models
         public User()
         {
             this.Comments = new HashSet<Comment>();
-            this.Courses = new HashSet<Course>();
+            this.News = new HashSet<News>();
+            this.Teachers = new HashSet<Teacher>();
             this.UserCourseSections = new HashSet<UserCourseSection>();
         }
     
-        public int userid { get; set; }
-        public int programid { get; set; }
-        public int setid { get; set; }
-        public int facultyid { get; set; }
+        public string userid { get; set; }
+        public Nullable<int> programid { get; set; }
+        public Nullable<int> setid { get; set; }
         public string password { get; set; }
+        public string firstname { get; set; }
+        public string lastname { get; set; }
         public string email { get; set; }
         public string type { get; set; }
         public bool active { get; set; }
@@ -33,10 +35,10 @@ namespace BBBAPI2.Models
         public string token { get; set; }
     
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<Course> Courses { get; set; }
-        public virtual Faculty Faculty { get; set; }
+        public virtual ICollection<News> News { get; set; }
         public virtual Program Program { get; set; }
         public virtual Set Set { get; set; }
+        public virtual ICollection<Teacher> Teachers { get; set; }
         public virtual ICollection<UserCourseSection> UserCourseSections { get; set; }
     }
 }

@@ -20,13 +20,19 @@ namespace BBBAPI2.Models
         }
     
         public int newsid { get; set; }
-        public int userid { get; set; }
+        public string userid { get; set; }
+        public int programid { get; set; }
+        public int coursesectionid { get; set; }
         public System.DateTime datetime { get; set; }
         public string title { get; set; }
         public string content { get; set; }
         public string priority { get; set; }
+        public System.DateTime expirydate { get; set; }
         public bool active { get; set; }
     
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual CourseSection CourseSection { get; set; }
+        public virtual Program Program { get; set; }
+        public virtual User User { get; set; }
     }
 }

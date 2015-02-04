@@ -12,5 +12,8 @@ namespace BBBAPI2.Controllers
         public string message { get; set; }
 
         public Object data { get; set; }
+
+
+
     }
 }
