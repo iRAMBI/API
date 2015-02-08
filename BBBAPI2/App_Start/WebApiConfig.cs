@@ -22,6 +22,8 @@ namespace BBBAPI2
 
             config.Routes.MapHttpRoute("Authentication", "api/auth", new { controller = "users", action = "postauthenticate"});
 
+            config.Routes.MapHttpRoute("GetCriticalNews", "api/newsfeed/critical", new { controller = "news", action = "getcriticalnews" });
+
            /* config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
