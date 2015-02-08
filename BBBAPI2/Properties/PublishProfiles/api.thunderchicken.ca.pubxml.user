@@ -80,10 +80,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2015 18:38:30</publishTime>
     </File>
     <File Include="bin/BBBAPI2.dll">
-      <publishTime>02/01/2015 14:15:49</publishTime>
+      <publishTime>02/03/2015 20:46:58</publishTime>
     </File>
     <File Include="bin/BBBAPI2.pdb">
-      <publishTime>02/01/2015 14:15:49</publishTime>
+      <publishTime>02/03/2015 20:46:57</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>01/25/2015 18:38:47</publishTime>
@@ -199,6 +199,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Global.asax">
       <publishTime>01/25/2015 18:37:03</publishTime>
     </File>
+    <File Include="Models/BBBModel.edmx.diagram">
+      <publishTime>02/03/2015 19:38:53</publishTime>
+    </File>
     <File Include="packages.config">
       <publishTime>01/25/2015 18:39:10</publishTime>
     </File>
@@ -257,7 +260,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2015 18:37:03</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>02/01/2015 00:37:57</publishTime>
+      <publishTime>02/03/2015 20:57:17</publishTime>
     </File>
   </ItemGroup>
 </Project>
