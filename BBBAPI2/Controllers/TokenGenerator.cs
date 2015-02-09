@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BBBAPI2.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,6 +21,22 @@ namespace BBBAPI2.Controllers
                 res.Append(valid[rnd.Next(valid.Length)]);
             }
             return res.ToString();
+        }
+
+        public static bool ValidateToken(string token)
+        {
+            irambidbEntities db = new irambidbEntities();
+
+            var result = from user in db.Users
+                         where user.token == token
+                         select user;
+
+            if (result.FirstOrDefault() == null)
+            {
+                return false;
+            }else{
+                return true;
+            }
         }
     }
 }
