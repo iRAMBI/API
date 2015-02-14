@@ -23,6 +23,7 @@ namespace BBBAPI2.Controllers
             return db.News;
         }*/
 
+        //Gets all standard news
         public IHttpActionResult GetStandardNews(string userid, string token)
         {
             //validate token
@@ -110,6 +111,7 @@ namespace BBBAPI2.Controllers
             
         }
 
+        //Gets all critical news articles
         public IHttpActionResult GetCriticalNews()
         {
             var result = from articles in db.News
@@ -143,6 +145,7 @@ namespace BBBAPI2.Controllers
 
         }
 
+        //Gets a single article
         public IHttpActionResult GetArticle(string userid, int newsid, string token)
         {
             //validate token
@@ -171,7 +174,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 404,
-                    message = "Article Does Not Exist"
+                    message = "Article Not Found"
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, error));

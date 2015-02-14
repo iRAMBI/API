@@ -147,7 +147,6 @@ namespace BBBAPI2.Controllers
             
         }
 
-
         // DELETE: api/Users/5
         [ResponseType(typeof(User))]
         public IHttpActionResult DeleteUser(int id)

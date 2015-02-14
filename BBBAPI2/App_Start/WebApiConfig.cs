@@ -28,6 +28,8 @@ namespace BBBAPI2
 
             config.Routes.MapHttpRoute("GetNewsArticle", "api/newsfeed/{userid}/article/{newsid}/{token}", new { controller = "news", action = "getarticle" });
 
+            config.Routes.MapHttpRoute("GetContacts", "api/contacts/{userid}/{token}", new { controller = "contact", action = "getcontact" });
+
            /* config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
