@@ -51,22 +51,29 @@ namespace BBBAPI2.Controllers
 
             foreach (News article in resultList)
             {
+                /*if (article.priority.Equals("critical") && Convert.ToDateTime(article.datetime) <= DateTime.Now)
+                {
+                    //this is an expired critical message
+                    continue;
+                }*/
+                
+
                 //foreach article get the number of comments for it
-                var count = (from comments in db.Comments
+                /*var count = (from comments in db.Comments
                              where comments.newsid == article.newsid
-                             select comments).Count();
+                             select comments).Count();*/
                 //foreach article resolve the name of the author
-                var author = (from user in db.Users
+                /*var author = (from user in db.Users
                               where user.userid == article.userid
                               select user);
                 List<User> authors = author.ToList();
 
                 string fname = authors.First().firstname;
-                string lname = authors.First().lastname;
+                string lname = authors.First().lastname;*/
                 
 
-                dataString += "{ 'newsid': '" + article.newsid + "', 'userid' : '" + article.userid + "', 'author': '" + fname + " " + lname + "', datetime : '" + article.datetime
-                    + "', 'title' : '" + article.title + "', 'content' : '" + article.content + "', 'numcomments' : " + count + "},";
+                dataString += "{ 'newsid': '" + article.newsid + "', 'userid' : '" + article.userid + "', 'author': '" + article.User.firstname + " " + article.User.lastname + "', datetime : '" + article.datetime
+                    + "', 'title' : '" + article.title + "', 'content' : '" + article.content + "', 'numcomments' : " + article.Comments.Count + "},";
             }
 
             dataString = dataString.Substring(0, dataString.Length - 1);
@@ -136,6 +143,89 @@ namespace BBBAPI2.Controllers
 
         }
 
+        public IHttpActionResult GetArticle(string userid, int newsid, string token)
+        {
+            //validate token
+            if (!TokenGenerator.ValidateToken(token))
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 403,
+                    message = "Invalid Token"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+            }
+
+            //find article
+            var result = from articles in db.News
+                         where (from users in db.Users
+                                where users.userid == userid
+                                select users.programid).Contains(articles.programid) &&
+                                articles.newsid == newsid
+                         select articles;
+           
+            //if no article respond with 404
+            if (result.FirstOrDefault() == null)
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 404,
+                    message = "Article Does Not Exist"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, error));
+            }
+
+            News article = result.FirstOrDefault();
+
+            //get comments
+            var commentResults = from comments in db.Comments
+                                 where comments.newsid == article.newsid
+                                 orderby comments.datetime ascending
+                                 select comments;
+
+            List<Comment> commentList = commentResults.ToList();
+            string dataString = "[";
+
+            foreach(Comment comment in commentList){
+                dataString += "{ 'commentid': '" + comment.commentid 
+                    + "', 'userid' : '" + comment.userid 
+                    + "', 'newsid' : '" + comment.newsid  
+                    + "', 'datetime' : '" + comment.datetime 
+                    + "', 'content' : '" + comment.content + "' },";
+            }
+
+
+            //if there are no comments don't cut off the start of the array
+            if (dataString.Length > 1)
+            {
+                dataString = dataString.Substring(0, dataString.Length - 1);
+            }
+            
+            dataString += "]";
+
+            //respond
+            JSONResponderClass success = new JSONResponderClass()
+            {
+                statuscode = 200,
+                message = "Article Fetched",
+                data = JObject.Parse("{ 'newsid': '" + article.newsid 
+                + "' , 'title' : '" + article.title 
+                + "' , 'content' : '" + article.content 
+                + "' , 'authorname' : '" + article.User.firstname + " " + article.User.lastname 
+                + "' , 'authorid' : '" + article.userid 
+                + "' , 'datetime' : '" + article.datetime 
+                + "' , 'numcomments' : '" + commentList.Count 
+                + "' , 'comments' : " + dataString + "}")
+            };
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
+
+
+
+
+        }
 
         // GET: api/News/5
         [ResponseType(typeof(News))]

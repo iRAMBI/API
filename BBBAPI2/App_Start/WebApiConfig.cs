@@ -26,6 +26,8 @@ namespace BBBAPI2
 
             config.Routes.MapHttpRoute("GetStandardNews", "api/newsfeed/{userid}/standard/{token}", new { controller = "news", action = "getstandardnews"});
 
+            config.Routes.MapHttpRoute("GetNewsArticle", "api/newsfeed/{userid}/article/{newsid}/{token}", new { controller = "news", action = "getarticle" });
+
            /* config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
