@@ -24,6 +24,7 @@ namespace BBBAPI2.Models
         public int courseid { get; set; }
         public Nullable<System.DateTime> datetimestart { get; set; }
         public Nullable<System.DateTime> datetimeend { get; set; }
+        public string term { get; set; }
     
         public virtual Course Course { get; set; }
         public virtual ICollection<News> News { get; set; }

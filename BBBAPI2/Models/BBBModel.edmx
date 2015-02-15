@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="irambidbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="irambidbModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="commentid" />
@@ -22,7 +22,6 @@
           <Property Name="courseid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="facultyid" Type="int" Nullable="false" />
           <Property Name="name" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="term" Type="nvarchar" MaxLength="50" />
           <Property Name="description" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="CourseSection">
@@ -33,6 +32,7 @@
           <Property Name="courseid" Type="int" Nullable="false" />
           <Property Name="datetimestart" Type="datetime" />
           <Property Name="datetimeend" Type="datetime" />
+          <Property Name="term" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Faculty">
           <Key>
@@ -365,8 +365,7 @@
             <End Role="UserCourseSection" EntitySet="UserCourseSection" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="irambidbModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -389,7 +388,6 @@
           <Property Name="courseid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="facultyid" Type="Int32" Nullable="false" />
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="term" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="description" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
           <NavigationProperty Name="Faculty" Relationship="Self.FK_Course_ToFaculty" FromRole="Course" ToRole="Faculty" />
           <NavigationProperty Name="CourseSections" Relationship="Self.FK_CourseSection_ToCourse" FromRole="Course" ToRole="CourseSection" />
@@ -405,6 +403,7 @@
           <NavigationProperty Name="Course" Relationship="Self.FK_CourseSection_ToCourse" FromRole="CourseSection" ToRole="Course" />
           <NavigationProperty Name="News" Relationship="Self.FK_News_ToCourseSection" FromRole="CourseSection" ToRole="News" />
           <NavigationProperty Name="UserCourseSections" Relationship="Self.FK_UserCourseSection_ToCourseSection" FromRole="CourseSection" ToRole="UserCourseSection" />
+          <Property Name="term" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Faculty">
           <Key>
@@ -783,7 +782,6 @@
                 <ScalarProperty Name="courseid" ColumnName="courseid" />
                 <ScalarProperty Name="facultyid" ColumnName="facultyid" />
                 <ScalarProperty Name="name" ColumnName="name" />
-                <ScalarProperty Name="term" ColumnName="term" />
                 <ScalarProperty Name="description" ColumnName="description" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -791,6 +789,7 @@
           <EntitySetMapping Name="CourseSections">
             <EntityTypeMapping TypeName="irambidbModel.CourseSection">
               <MappingFragment StoreEntitySet="CourseSection">
+                <ScalarProperty Name="term" ColumnName="term" />
                 <ScalarProperty Name="coursesectionid" ColumnName="coursesectionid" />
                 <ScalarProperty Name="courseid" ColumnName="courseid" />
                 <ScalarProperty Name="datetimestart" ColumnName="datetimestart" />

@@ -37,6 +37,15 @@ namespace BBBAPI2.Controllers
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
             }
 
+            /*var result2 = from user in db.UserCourseSections
+                          where user.userid == userid
+                          select user;
+
+            var result3 = from teachers in db.UserCourseSections
+                          where teachers.role == "instructor"
+                          select teachers;*/
+
+          
             var result = from courseSection in db.UserCourseSections
                          where courseSection.userid == userid
                          select courseSection.CourseSection;
@@ -47,7 +56,16 @@ namespace BBBAPI2.Controllers
             // TODO Get Teacher id somehow
             foreach (CourseSection cs in courseSectionList)
             {
-                dataString += "{ 'coursesectionid' : '" + cs.coursesectionid + "' , 'courseid' : '" + cs.courseid + "' , 'coursename' : '" + cs.Course.name + "' , 'teacherid' : '" + "empty" + "' , 'datetimestart' : '" + cs.datetimestart + "' , 'datetimeend' : '" + cs.datetimeend + "'},";
+
+                //find what teacher teaches this course section
+                var tuserid = from teacher in db.UserCourseSections
+                             where teacher.role == "instructor" &&
+                                   teacher.coursesectionid == cs.coursesectionid
+                             select teacher.User.userid;
+
+                string teacherid = tuserid.FirstOrDefault() == null ? "" : tuserid.FirstOrDefault();
+
+                dataString += "{ 'coursesectionid' : '" + cs.coursesectionid + "' , 'courseid' : '" + cs.courseid + "' , 'coursename' : '" + cs.Course.name + "' , 'teacherid' : '" + teacherid + "' , 'datetimestart' : '" + cs.datetimestart + "' , 'datetimeend' : '" + cs.datetimeend + "'},";
             }
 
             if (courseSectionList.Count > 1)
