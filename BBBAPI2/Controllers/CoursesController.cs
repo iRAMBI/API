@@ -75,11 +75,24 @@ namespace BBBAPI2.Controllers
             
             dataString += "]";
 
+            //find user information about thier program
+            User user = (from users in db.Users
+                              where users.userid == userid
+                              select users).FirstOrDefault();
+            
+            
             JSONResponderClass success = new JSONResponderClass()
             {
                 statuscode = 200,
                 message = "Courses Fetched",
-                data = JObject.Parse("{ 'courses': " + dataString + "}")
+                data = JObject.Parse("{ 'userid' : '" + userid 
+                    + "', 'name': '" + user.firstname + " " + user.lastname 
+                    + "', 'programid' : '" + user.programid 
+                    + "', 'programname' : '" + user.Program.programname 
+                    + "', 'facultyid' : '" + user.Program.facultyid 
+                    + "', 'facultyname' : '" + user.Program.Faculty.facultyname
+                    + "', 'term' : '" + courseSectionList.First().term // assuming user can only be enrolled in courses of the same term
+                    + "', 'courses': " + dataString + "}")
                 //data = resultList
             };
 
