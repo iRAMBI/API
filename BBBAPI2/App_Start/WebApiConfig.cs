@@ -20,7 +20,9 @@ namespace BBBAPI2
             // Web API routes
             config.MapHttpAttributeRoutes();
 
-            config.Routes.MapHttpRoute("Authentication", "api/auth", new { controller = "users", action = "postauthenticate"});
+            config.Routes.MapHttpRoute("PostAuthentication", "api/auth", new { controller = "users", action = "postauthenticate"});
+
+            config.Routes.MapHttpRoute("PostAppleToken", "api/auth/{userid}/appletoken/{appleToken}/{token}", new { controller = "users", action = "postsettoken" });
 
             config.Routes.MapHttpRoute("GetCriticalNews", "api/newsfeed/critical", new { controller = "news", action = "getcriticalnews" });
 
@@ -31,6 +33,8 @@ namespace BBBAPI2
             config.Routes.MapHttpRoute("GetContacts", "api/contacts/{userid}/{token}", new { controller = "contact", action = "getcontact" });
 
             config.Routes.MapHttpRoute("GetMyCourses", "api/mycourses/{userid}/{token}", new { controller = "courses", action = "getcourses" });
+
+            
 
            /* config.Routes.MapHttpRoute(
                 name: "DefaultApi",

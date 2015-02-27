@@ -33,6 +33,7 @@ namespace BBBAPI2.Models
         public bool active { get; set; }
         public string phonenumber { get; set; }
         public string token { get; set; }
+        public string appletoken { get; set; }
     
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<News> News { get; set; }

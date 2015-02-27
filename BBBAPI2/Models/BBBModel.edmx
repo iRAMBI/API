@@ -103,6 +103,7 @@
           <Property Name="active" Type="bit" Nullable="false" />
           <Property Name="phonenumber" Type="nvarchar" MaxLength="50" />
           <Property Name="token" Type="nvarchar" MaxLength="50" />
+          <Property Name="appletoken" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityType Name="UserCourseSection">
           <Key>
@@ -495,6 +496,7 @@
           <NavigationProperty Name="Set" Relationship="Self.FK_User_ToSet" FromRole="User" ToRole="Set" />
           <NavigationProperty Name="Teachers" Relationship="Self.FK_Teacher_ToUser" FromRole="User" ToRole="Teacher" />
           <NavigationProperty Name="UserCourseSections" Relationship="Self.FK_UserCourseSection_ToUser" FromRole="User" ToRole="UserCourseSection" />
+          <Property Name="appletoken" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UserCourseSection">
           <Key>
@@ -858,6 +860,7 @@
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="irambidbModel.User">
               <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="appletoken" ColumnName="appletoken" />
                 <ScalarProperty Name="userid" ColumnName="userid" />
                 <ScalarProperty Name="programid" ColumnName="programid" />
                 <ScalarProperty Name="setid" ColumnName="setid" />

@@ -147,6 +147,44 @@ namespace BBBAPI2.Controllers
             
         }
 
+
+        public IHttpActionResult PostSetToken(string userid, string token, string appleToken)
+        {
+            //validate token
+            if (!TokenGenerator.ValidateToken(token))
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 403,
+                    message = "Invalid Token"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+            }
+
+            //now set the token
+
+            User user = (from users in db.Users
+                        where users.userid == userid
+                        select users).First();
+
+            user.appletoken = appleToken;
+
+            db.SaveChanges();
+
+            //now respond
+
+            JSONResponderClass success = new JSONResponderClass()
+            {
+                statuscode = 200,
+                message = "Token Save Successful",
+            };
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
+           
+        }
+
+
         // DELETE: api/Users/5
         [ResponseType(typeof(User))]
         public IHttpActionResult DeleteUser(int id)
