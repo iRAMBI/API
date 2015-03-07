@@ -10,8 +10,8 @@ api.thunderchicken.ca/
 #Routes
 
 ##Authentication
-POST /api/auth
-Body: <br>
+####POST /api/auth
+Body:
 ````json
 { 
   "email":String,
