@@ -11,19 +11,10 @@ api.thunderchicken.ca/
 
 ##Authentication
 POST /api/auth
-Body:
+Body: <br>
 ````json
-//On Send
 { 
   "email":String,
-	"password":String
-}
-//On Reply
-{
-	"statuscode":200 OR 403,
-	"statusmessage": "Authentication Successful" OR  "Invalid Credentials",
-	"data": {
-			"token":String 
-	}
+  "password":String
 }
 ````
