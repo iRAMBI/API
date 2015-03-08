@@ -7,3 +7,40 @@ api.thunderchicken.ca/
 
 -note if this route is not working try using api.thunderchicken.ca:8080
 
+#Routes Reference
+See oneNote For Full Documentation
+
+##Authentication
+####POST Authenticate
+Route: /api/auth <br>
+Body: <br>
+````json
+{ 
+  "email":String,
+  "password":String
+}
+````
+####POST Submit Apple Toke
+Route: /api/auth/:userid/appletoken/:appletoken/:token <br>
+Body: There is no body content to send
+
+##Newsfeed
+####GET Standard Newsfeed
+Route: GET /api/newsfeed/:userid/standard/:token <br>
+Body: There is no body content to send
+####GET Critical Newsfeed
+Route: GET /api/newsfeed/critical <br>
+Body: There is no body content to send
+####GET Single News Article
+Route: GET /api/newsfeed/:userid/article/:newsid/:token <br>
+Body: There is no body content to send
+ 
+##MyCourses
+####GET All Courses Belonging to Logged In User
+Route: GET /api/mycourses/:userid/:token <br>
+Body: There is no body content to send
+
+##Contacts
+####Get All Contacts
+Route: GET /api/contacts/:userid/:token <br>
+Body: There is no body content to send
