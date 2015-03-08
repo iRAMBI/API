@@ -32,6 +32,8 @@ namespace BBBAPI2
 
             config.Routes.MapHttpRoute("GetContacts", "api/contacts/{userid}/{token}", new { controller = "contact", action = "getcontact" });
 
+            config.Routes.MapHttpRoute("GetSpecificContact", "api/contacts/{userid}/single/{contactid}/{token}", new { controller = "contact", action = "getspecificcontact" });
+
             config.Routes.MapHttpRoute("GetMyCourses", "api/mycourses/{userid}/{token}", new { controller = "courses", action = "getcourses" });
 
             
