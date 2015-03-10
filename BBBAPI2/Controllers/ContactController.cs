@@ -18,7 +18,7 @@ namespace BBBAPI2.Controllers
         private irambidbEntities db = new irambidbEntities();
 
 
-        public IHttpActionResult GetContact(string userid, string token, string? page)
+        public IHttpActionResult GetContact(string userid, string token, string page = null)
         {
             //validate token
             if (!TokenGenerator.ValidateToken(token))
@@ -40,6 +40,7 @@ namespace BBBAPI2.Controllers
                            orderby users.lastname ascending
                           select users;
 
+            //offset logic for paging
             int offset = 50;
             if (page != null)
             {
@@ -49,6 +50,7 @@ namespace BBBAPI2.Controllers
                 }
             }
 
+            //offset logic for paging
             List<User> userList = results.Skip(offset - 50).Take(offset).ToList();
             string dataString = "[";
 

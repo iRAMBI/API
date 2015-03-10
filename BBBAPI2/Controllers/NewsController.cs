@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using BBBAPI2.Models;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace BBBAPI2.Controllers
 {
@@ -227,6 +228,42 @@ namespace BBBAPI2.Controllers
 
 
 
+
+        }
+
+        [HttpPost]
+        public IHttpActionResult PostNewsArticle(string userid, string token, [FromBody] News body)
+        {
+            //validate token
+            if (!TokenGenerator.ValidateToken(token))
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 403,
+                    message = "Invalid Token"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+            }
+
+            //formalize data with any missing content
+            body.userid = userid;
+            body.datetime = DateTime.Now;
+            body.active = true;
+
+            Debug.WriteLine(body.ToString());
+
+            db.News.Add(body);
+            db.SaveChanges();
+
+            JSONResponderClass success = new JSONResponderClass()
+            {
+                statuscode = 201,
+                message = "Successfuly Created News Article",
+                data = JObject.Parse("{ 'newsid': " + body.newsid + "' }")
+            };
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created, success));
 
         }
 

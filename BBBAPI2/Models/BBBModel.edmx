@@ -49,7 +49,7 @@
           <Property Name="userid" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="programid" Type="int" Nullable="false" />
           <Property Name="coursesectionid" Type="int" Nullable="false" />
-          <Property Name="datetime" Type="datetime" Nullable="false" />
+          <Property Name="datetime" Type="datetime2" Precision="7" Nullable="false" />
           <Property Name="title" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="content" Type="nvarchar(max)" />
           <Property Name="priority" Type="nvarchar" MaxLength="50" />
@@ -424,7 +424,7 @@
           <Property Name="userid" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="programid" Type="Int32" Nullable="false" />
           <Property Name="coursesectionid" Type="Int32" Nullable="false" />
-          <Property Name="datetime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="datetime" Type="DateTime" Nullable="false" Precision="7" />
           <Property Name="title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="priority" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />

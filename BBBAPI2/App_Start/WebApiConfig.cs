@@ -30,6 +30,8 @@ namespace BBBAPI2
 
             config.Routes.MapHttpRoute("GetNewsArticle", "api/newsfeed/{userid}/article/{newsid}/{token}", new { controller = "news", action = "getarticle" });
 
+            config.Routes.MapHttpRoute("PostNewsArticle", "api/newsfeed/{userid}/article/{token}", new { controller = "news", action = "postnewsarticle" });
+            
             config.Routes.MapHttpRoute("GetContacts", "api/contacts/{userid}/{token}/{page}", new { controller = "contact", action = "getcontact" , page = RouteParameter.Optional});
 
             config.Routes.MapHttpRoute("GetSpecificContact", "api/contacts/{userid}/single/{contactid}/{token}", new { controller = "contact", action = "getspecificcontact" });

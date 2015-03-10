@@ -239,6 +239,7 @@
       <DependentUpon>BBBModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\NewMetaData.cs" />
     <Compile Include="Models\News.cs">
       <DependentUpon>BBBModel.tt</DependentUpon>
     </Compile>
