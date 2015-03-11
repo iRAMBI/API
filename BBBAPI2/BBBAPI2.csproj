@@ -245,6 +245,7 @@
     <Compile Include="Models\Program.cs">
       <DependentUpon>BBBModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Search.cs" />
     <Compile Include="Models\Set.cs">
       <DependentUpon>BBBModel.tt</DependentUpon>
     </Compile>

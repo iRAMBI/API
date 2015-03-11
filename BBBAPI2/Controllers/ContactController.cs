@@ -18,6 +18,54 @@ namespace BBBAPI2.Controllers
     {
         private irambidbEntities db = new irambidbEntities();
 
+
+        [HttpPost]
+        public IHttpActionResult GetSearchContact(string userid, string token, [FromBody] Search search)
+        {
+            //validate token
+            if (!TokenGenerator.ValidateToken(token))
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 403,
+                    message = "Invalid Token. GetContact"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+            }
+
+            //get all user course sections that contain the same corsesection id as me and have a user
+            // with a firstname and lastname that contains the search content
+            var results = from ucs in db.UserCourseSections
+                          where (from myucs in db.UserCourseSections 
+                                 where myucs.userid == userid 
+                                 select myucs.coursesectionid).Contains(ucs.coursesectionid) 
+                          && (ucs.User.firstname + " " + ucs.User.lastname).Contains(search.searchContent)
+                          select ucs.User;
+
+            List<User> userList = results.ToList();
+
+            string dataString = "[";
+
+            foreach (User singleUser in userList)
+            {
+                dataString += "{ 'userid' : '" + singleUser.userid + "', 'name' : '" + singleUser.firstname + " " + singleUser.lastname + "' },";
+            }
+
+            dataString = dataString.Substring(0, dataString.Length - 1);
+            dataString += "]";
+
+            JSONResponderClass success = new JSONResponderClass()
+            {
+                statuscode = 200,
+                message = "Contacts Search Results Fetched",
+                data = JObject.Parse("{ 'contacts': " + dataString + "}")
+                //data = resultList
+            };
+        }
+
+
+
         [HttpGet]
         public IHttpActionResult GetContact(string userid, string token, string page = null)
         {
