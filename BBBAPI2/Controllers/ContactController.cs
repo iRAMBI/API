@@ -10,6 +10,7 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using BBBAPI2.Models;
 using Newtonsoft.Json.Linq;
+using System.Diagnostics;
 
 namespace BBBAPI2.Controllers
 {
@@ -17,7 +18,7 @@ namespace BBBAPI2.Controllers
     {
         private irambidbEntities db = new irambidbEntities();
 
-
+        [HttpGet]
         public IHttpActionResult GetContact(string userid, string token, string page = null)
         {
             //validate token
@@ -26,7 +27,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 403,
-                    message = "Invalid Token"
+                    message = "Invalid Token. GetContact"
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
@@ -83,7 +84,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 403,
-                    message = "Invalid Token"
+                    message = "Invalid Token. GetSpecificContact"
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
@@ -163,6 +164,68 @@ namespace BBBAPI2.Controllers
             };
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
+        }
+
+        [HttpGet]
+        public IHttpActionResult GetPostableContacts(string userid, string token)
+        {
+            Debug.WriteLine("Made it here");
+            //validate token
+            if (!TokenGenerator.ValidateToken(token))
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 403,
+                    message = "Invalid Token. Here"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+            }
+
+            // gets all course secitons the user is enrolled in. This will include the global course section
+            var results2 = from ucs in db.UserCourseSections
+                           where ucs.userid == userid
+                           select ucs;
+
+
+
+            //get all contacts in the same program as the user's id
+           /* var results = from users in db.Users
+                          where (from user in db.Users
+                                 where user.userid == userid
+                                 select user.programid).Contains(users.programid)
+                          orderby users.lastname ascending
+                          select users;*/
+
+           // List<User> userList = results.ToList();
+
+            string dataString = "[";
+
+            List<UserCourseSection> ucsList = results2.ToList();
+
+            foreach (UserCourseSection ucsItem in ucsList)
+            {
+                dataString += "{ 'coursesectionid' : '" + ucsItem.CourseSection.courseid + "', 'coursename' : '" + ucsItem.CourseSection.Course.name + "' },";
+            }
+
+           /* foreach (User singleUser in userList)
+            {
+                dataString += "{ 'userid' : '" + singleUser.userid + "', 'name' : '" + singleUser.firstname + " " + singleUser.lastname + "', 'coursesection' : '" + singleUser.UserCourseSections.ToList().ToString() + "' },";
+            }*/
+
+            dataString = dataString.Substring(0, dataString.Length - 1);
+            dataString += "]";
+
+            JSONResponderClass success = new JSONResponderClass()
+            {
+                statuscode = 200,
+                message = "Postable Contacts Fetched",
+                data = JObject.Parse("{ 'coursesections': " + dataString + "}")
+                //data = resultList
+            };
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
+
         }
 
 
