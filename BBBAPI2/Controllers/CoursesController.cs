@@ -26,7 +26,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult GetCourses(string userid, string token)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {

@@ -294,6 +294,10 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="validateToken" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="userid" Type="nvarchar" Mode="In" />
+          <Parameter Name="token" Type="nvarchar" Mode="In" />
+        </Function>
         <EntityContainer Name="irambidbModelStoreContainer">
           <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Course" EntityType="Self.Course" Schema="dbo" store:Type="Tables" />
@@ -760,7 +764,25 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserCourseSection" EntitySet="UserCourseSections" />
           </AssociationSet>
+          <FunctionImport Name="validateToken" ReturnType="Collection(irambidbModel.validateToken_Result)">
+            <Parameter Name="userid" Mode="In" Type="String" />
+            <Parameter Name="token" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
+        <ComplexType Name="validateToken_Result">
+          <Property Type="String" Name="userid" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="programid" Nullable="true" />
+          <Property Type="Int32" Name="setid" Nullable="true" />
+          <Property Type="String" Name="password" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="firstname" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="lastname" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="email" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="type" Nullable="false" MaxLength="50" />
+          <Property Type="Boolean" Name="active" Nullable="false" />
+          <Property Type="String" Name="phonenumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="token" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="appletoken" Nullable="true" MaxLength="100" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -884,6 +906,24 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="validateToken" FunctionName="irambidbModel.Store.validateToken">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="irambidbModel.validateToken_Result">
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="programid" ColumnName="programid" />
+                <ScalarProperty Name="setid" ColumnName="setid" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="active" ColumnName="active" />
+                <ScalarProperty Name="phonenumber" ColumnName="phonenumber" />
+                <ScalarProperty Name="token" ColumnName="token" />
+                <ScalarProperty Name="appletoken" ColumnName="appletoken" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

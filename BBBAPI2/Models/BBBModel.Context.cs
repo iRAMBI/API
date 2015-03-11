@@ -12,6 +12,8 @@ namespace BBBAPI2.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class irambidbEntities : DbContext
     {
@@ -35,5 +37,18 @@ namespace BBBAPI2.Models
         public virtual DbSet<Teacher> Teachers { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserCourseSection> UserCourseSections { get; set; }
+    
+        public virtual ObjectResult<validateToken_Result> validateToken(string userid, string token)
+        {
+            var useridParameter = userid != null ?
+                new ObjectParameter("userid", userid) :
+                new ObjectParameter("userid", typeof(string));
+    
+            var tokenParameter = token != null ?
+                new ObjectParameter("token", token) :
+                new ObjectParameter("token", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<validateToken_Result>("validateToken", useridParameter, tokenParameter);
+        }
     }
 }

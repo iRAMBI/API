@@ -151,7 +151,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult PostSetToken(string userid, string token, string appleToken)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {

@@ -28,7 +28,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult GetStandardNews(string userid, string token)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {
@@ -72,10 +72,15 @@ namespace BBBAPI2.Controllers
 
                 string fname = authors.First().firstname;
                 string lname = authors.First().lastname;*/
-                
 
-                dataString += "{ 'newsid': '" + article.newsid + "', 'userid' : '" + article.userid + "', 'author': '" + article.User.firstname + " " + article.User.lastname + "', datetime : '" + article.datetime
-                    + "', 'title' : '" + article.title + "', 'content' : '" + article.content + "', 'numcomments' : " + article.Comments.Count + "},";
+                dataString += "{ 'newsid': '" + article.newsid 
+                    + "', 'userid' : '" + article.userid 
+                    + "', 'author': '" + article.User.firstname + " " + article.User.lastname 
+                    + "', 'coursesectionid' : '" + article.coursesectionid 
+                    + "', 'datetime' : '" + article.datetime
+                    + "', 'title' : '" + article.title 
+                    + "', 'content' : '" + article.content 
+                    + "', 'numcomments' : " + article.Comments.Count + "},";
             }
 
             dataString = dataString.Substring(0, dataString.Length - 1);
@@ -150,7 +155,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult GetArticle(string userid, int newsid, string token)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {
@@ -235,7 +240,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult PostNewsArticle(string userid, string token, [FromBody] News body)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {

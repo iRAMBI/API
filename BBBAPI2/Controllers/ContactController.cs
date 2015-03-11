@@ -23,7 +23,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult GetSearchContact(string userid, string token, [FromBody] Search search)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {
@@ -62,6 +62,8 @@ namespace BBBAPI2.Controllers
                 data = JObject.Parse("{ 'contacts': " + dataString + "}")
                 //data = resultList
             };
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
         }
 
 
@@ -70,7 +72,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult GetContact(string userid, string token, string page = null)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {
@@ -127,7 +129,7 @@ namespace BBBAPI2.Controllers
         public IHttpActionResult GetSpecificContact(string userid, string contactid, string token)
         {
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {
@@ -219,7 +221,7 @@ namespace BBBAPI2.Controllers
         {
             Debug.WriteLine("Made it here");
             //validate token
-            if (!TokenGenerator.ValidateToken(token))
+            if (!TokenGenerator.ValidateToken(token, userid))
             {
                 JSONResponderClass error = new JSONResponderClass()
                 {

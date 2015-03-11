@@ -1,6 +1,8 @@
 ﻿using BBBAPI2.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -23,15 +25,17 @@ namespace BBBAPI2.Controllers
             return res.ToString();
         }
 
-        public static bool ValidateToken(string token)
+        public static bool ValidateToken(string token, string userid)
         {
             irambidbEntities db = new irambidbEntities();
 
-            var result = from user in db.Users
-                         where user.token == token
-                         select user;
+            ObjectResult<validateToken_Result> returnedVal; 
 
-            if (result.FirstOrDefault() == null)
+            returnedVal = db.validateToken(userid, token);
+
+            validateToken_Result theUser = returnedVal.FirstOrDefault();
+
+            if (theUser == null)
             {
                 return false;
             }else{
