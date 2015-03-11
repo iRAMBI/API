@@ -57,8 +57,8 @@ Body: There is no body content to send
 Route: GET /api/contacts/:userid/:token <br>
 Body: There is no body content to send
 ####Get Specific Contact
-Route: GET /api/contacts/:userid/single/:contactid/:token
+Route: GET /api/contacts/:userid/single/:contactid/:token <br>
 Body: There is no body content to send
 ####Get Postable Contacts
-Route: GET /api/contacts/:userid/postable/:token
+Route: GET /api/contacts/:userid/postable/:token <br>
 Body: There is no body content to send
