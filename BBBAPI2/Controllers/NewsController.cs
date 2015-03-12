@@ -294,6 +294,40 @@ namespace BBBAPI2.Controllers
             body.datetime = DateTime.Now;
             body.active = true;
 
+            //get the program id belonging to the coursesectionid
+            var result = (from ucs in db.UserCourseSections
+                            where ucs.coursesectionid == body.coursesectionid
+                            select ucs.User);
+
+            User user = result.FirstOrDefault();
+
+            // if user doesn't exist return 404
+            if (user == null)
+            {
+
+                //validate token
+                if (!TokenGenerator.ValidateToken(token, userid))
+                {
+                    JSONResponderClass error = new JSONResponderClass()
+                    {
+                        statuscode = 404,
+                        message = "Could Not Find User In Course Section"
+                    };
+
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, error));
+                }
+            }
+            else
+            {
+                if (user.programid != null)
+                {
+                    body.programid = (int)user.programid;
+                }
+                
+            }
+
+            
+
             Debug.WriteLine(body.ToString());
 
             db.News.Add(body);
