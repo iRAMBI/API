@@ -197,6 +197,7 @@ namespace BBBAPI2.Controllers
             foreach(Comment comment in commentList){
                 dataString += "{ 'commentid': '" + comment.commentid 
                     + "', 'userid' : '" + comment.userid 
+                    + "', 'name' : '" + comment.User.firstname + " " + comment.User.lastname
                     + "', 'newsid' : '" + comment.newsid  
                     + "', 'datetime' : '" + comment.datetime 
                     + "', 'content' : '" + comment.content + "' },";
@@ -234,6 +235,46 @@ namespace BBBAPI2.Controllers
         }
 
         [HttpPost]
+        public IHttpActionResult PostComment(string userid, string token, string newsid, [FromBody] Comment body)
+        {
+            //validate token
+            if (!TokenGenerator.ValidateToken(token, userid))
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 403,
+                    message = "Invalid Token"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+            }
+
+            body.datetime = DateTime.Now;
+            body.userid = userid;
+
+            //if there is no newsid or the newsid in the body does not match the parameter
+            //we will use the parameter passed one
+            if (body.newsid == null || body.newsid != Convert.ToInt32(newsid))
+            {
+                body.newsid = Convert.ToInt32(newsid);
+            }
+
+            db.Comments.Add(body);
+            db.SaveChanges();
+
+            JSONResponderClass success = new JSONResponderClass()
+            {
+                statuscode = 201,
+                message = "Successfuly Created Comment",
+                data = JObject.Parse("{ 'newsid': '" + body.newsid + "', 'commentid' : '" + body.commentid + "' }")
+            };
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created, success));
+
+
+        }
+
+        [HttpPost]
         public IHttpActionResult PostNewsArticle(string userid, string token, [FromBody] News body)
         {
             //validate token
@@ -262,7 +303,7 @@ namespace BBBAPI2.Controllers
             {
                 statuscode = 201,
                 message = "Successfuly Created News Article",
-                data = JObject.Parse("{ 'newsid': " + body.newsid + "' }")
+                data = JObject.Parse("{ 'newsid': '" + body.newsid + "' }")
             };
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.Created, success));

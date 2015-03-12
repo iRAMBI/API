@@ -128,7 +128,11 @@ namespace BBBAPI2.Controllers
                 {
                     statuscode = 200,
                     message = "Authentication Successful",
-                    data = JObject.Parse("{ 'token': '" + newToken + "', 'type': '" + theUser.type + "', 'userid': '" + theUser.userid + "' }")
+                    data = JObject.Parse("{ 'token': '" + newToken 
+                        + "', 'type': '" + theUser.type 
+                        + "', 'userid': '" + theUser.userid 
+                        + "', 'name': '" + theUser.firstname + " " + theUser.lastname 
+                        + "' }")
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
