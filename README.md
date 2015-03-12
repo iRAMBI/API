@@ -47,6 +47,14 @@ Body: <br>
   "expirydate": DateTime
 }
 ````
+####POST Comment
+Route: POST /api/newsfeed/:userid/article/:newsid/comment/:token <br>
+Body: <br>
+````json
+{
+  "content" : String
+}
+````
 ##MyCourses
 ####GET All Courses Belonging to Logged In User
 Route: GET /api/mycourses/:userid/:token <br>
