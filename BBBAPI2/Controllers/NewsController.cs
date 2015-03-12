@@ -120,16 +120,13 @@ namespace BBBAPI2.Controllers
         //Gets all critical news articles
         public IHttpActionResult GetCriticalNews()
         {
-            var result = from articles in db.News
-                         where articles.priority == "critical"
-                         select articles;
+            var result = db.getCriticalNews();
 
             var resultList = result.ToList();
 
-            List<News> newsArticles = new List<News>();
             string dataString = "[";
 
-            foreach(News article in resultList){
+            foreach(var article in resultList){
                 dataString += "{ 'newsid': '" + article.newsid + "', 'userid' : '" + article.userid + "', 'title' : '" + article.title + "', 'content' : '" + article.content + "'},";
             }
 

@@ -294,6 +294,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="getCriticalNews" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <Function Name="validateToken" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userid" Type="nvarchar" Mode="In" />
           <Parameter Name="token" Type="nvarchar" Mode="In" />
@@ -768,6 +769,7 @@
             <Parameter Name="userid" Mode="In" Type="String" />
             <Parameter Name="token" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="getCriticalNews" ReturnType="Collection(irambidbModel.getCriticalNews_Result)" />
         </EntityContainer>
         <ComplexType Name="validateToken_Result">
           <Property Type="String" Name="userid" Nullable="false" MaxLength="50" />
@@ -782,6 +784,18 @@
           <Property Type="String" Name="phonenumber" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="token" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="appletoken" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="getCriticalNews_Result">
+          <Property Type="Int32" Name="newsid" Nullable="false" />
+          <Property Type="String" Name="userid" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="programid" Nullable="false" />
+          <Property Type="Int32" Name="coursesectionid" Nullable="false" />
+          <Property Type="DateTime" Name="datetime" Nullable="false" Precision="23" />
+          <Property Type="String" Name="title" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="content" Nullable="true" />
+          <Property Type="String" Name="priority" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="expirydate" Nullable="false" Precision="23" />
+          <Property Type="Boolean" Name="active" Nullable="false" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -921,6 +935,22 @@
                 <ScalarProperty Name="phonenumber" ColumnName="phonenumber" />
                 <ScalarProperty Name="token" ColumnName="token" />
                 <ScalarProperty Name="appletoken" ColumnName="appletoken" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="getCriticalNews" FunctionName="irambidbModel.Store.getCriticalNews">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="irambidbModel.getCriticalNews_Result">
+                <ScalarProperty Name="newsid" ColumnName="newsid" />
+                <ScalarProperty Name="userid" ColumnName="userid" />
+                <ScalarProperty Name="programid" ColumnName="programid" />
+                <ScalarProperty Name="coursesectionid" ColumnName="coursesectionid" />
+                <ScalarProperty Name="datetime" ColumnName="datetime" />
+                <ScalarProperty Name="title" ColumnName="title" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="priority" ColumnName="priority" />
+                <ScalarProperty Name="expirydate" ColumnName="expirydate" />
+                <ScalarProperty Name="active" ColumnName="active" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

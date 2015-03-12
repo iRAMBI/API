@@ -50,5 +50,10 @@ namespace BBBAPI2.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<validateToken_Result>("validateToken", useridParameter, tokenParameter);
         }
+    
+        public virtual ObjectResult<getCriticalNews_Result> getCriticalNews()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<getCriticalNews_Result>("getCriticalNews");
+        }
     }
 }
