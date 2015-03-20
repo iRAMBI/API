@@ -38,9 +38,36 @@ namespace BBBAPI2.Controllers
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
             }
 
+            int intcsid;
+            try
+            {
+                intcsid = Convert.ToInt32(coursesectionid);
+            }
+            catch (FormatException fe)
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 400,
+                    message = "Course Section Format Invalid"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest, error));
+            }
+            catch (OverflowException oe)
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 400,
+                    message = "Course Section Conversion Error"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.BadRequest, error));
+            }
+            
+
             //find all news belonging to this coursesection
             var result = from csn in db.News
-                         where csn.coursesectionid == Convert.ToInt32(coursesectionid)
+                         where csn.coursesectionid == intcsid
                          select csn;
 
             List<News> courseSectionNewsList = result.ToList();

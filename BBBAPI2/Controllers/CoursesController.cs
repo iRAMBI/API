@@ -53,7 +53,6 @@ namespace BBBAPI2.Controllers
             List<CourseSection> courseSectionList = result.ToList();
             string dataString = "[";
 
-            // TODO Get Teacher id somehow
             foreach (CourseSection cs in courseSectionList)
             {
 
