@@ -42,7 +42,6 @@ Route: POST /api/newsfeed/:userid/article/:token <br>
 Body: <br>
 ````json
 {
-  "programid": Number,
   "coursesectionid": Number,
   "title": String,
   "content": String,
