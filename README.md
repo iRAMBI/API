@@ -31,6 +31,9 @@ Body: There is no body content to send
 ####GET Critical Newsfeed
 Route: GET /api/newsfeed/critical <br>
 Body: There is no body content to send
+####GET Course Section Newsfeed
+Route: GET /api/newsfeed/:userid/coursesection/:coursesectionid/:token
+Body: There is no body content to send
 ####GET Single News Article
 Route: GET /api/newsfeed/:userid/article/:newsid/:token <br>
 Body: There is no body content to send

@@ -24,6 +24,56 @@ namespace BBBAPI2.Controllers
             return db.News;
         }*/
 
+        public IHttpActionResult GetCourseSectionNews(string userid, string coursesectionid, string token)
+        {
+            //validate token
+            if (!TokenGenerator.ValidateToken(token, userid))
+            {
+                JSONResponderClass error = new JSONResponderClass()
+                {
+                    statuscode = 403,
+                    message = "Invalid Token"
+                };
+
+                return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+            }
+
+            //find all news belonging to this coursesection
+            var result = from csn in db.News
+                         where csn.coursesectionid == Convert.ToInt32(coursesectionid)
+                         select csn;
+
+            List<News> courseSectionNewsList = result.ToList();
+            string dataString = "[";
+
+            foreach (News article in courseSectionNewsList)
+            {
+                dataString += "{ 'newsid': '" + article.newsid
+                    + "', 'userid' : '" + article.userid
+                    + "', 'author': '" + article.User.firstname + " " + article.User.lastname
+                    + "', 'coursesectionid' : '" + article.coursesectionid
+                    + "', 'datetime' : '" + article.datetime
+                    + "', 'title' : '" + article.title
+                    + "', 'content' : '" + article.content
+                    + "', 'numcomments' : " + article.Comments.Count + "},";
+            }
+
+            dataString = dataString.Substring(0, dataString.Length - 1);
+            dataString += "]";
+
+            JSONResponderClass success = new JSONResponderClass()
+            {
+                statuscode = 200,
+                message = "Course Section News Fetched",
+                data = JObject.Parse("{ 'news': " + dataString + "}")
+                //data = resultList
+            };
+
+            return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
+
+        }
+
+
         //Gets all standard news
         public IHttpActionResult GetStandardNews(string userid, string token)
         {
