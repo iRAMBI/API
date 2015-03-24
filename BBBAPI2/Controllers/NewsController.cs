@@ -88,11 +88,20 @@ namespace BBBAPI2.Controllers
             dataString = dataString.Substring(0, dataString.Length - 1);
             dataString += "]";
 
+            //get the coursesection name belonging to the id
+            var result2 = from courseSection in db.CourseSections
+                         where courseSection.coursesectionid == intcsid
+                         select courseSection;
+
+            CourseSection theCourseSection = result2.FirstOrDefault();
+
             JSONResponderClass success = new JSONResponderClass()
             {
                 statuscode = 200,
                 message = "Course Section News Fetched",
-                data = JObject.Parse("{ 'news': " + dataString + "}")
+                data = JObject.Parse("{ 'coursename': '" + theCourseSection.Course.name 
+                    + "', 'courseid' : '" + theCourseSection.Course.courseid 
+                    + "', 'news': " + dataString + "}")
                 //data = resultList
             };
 

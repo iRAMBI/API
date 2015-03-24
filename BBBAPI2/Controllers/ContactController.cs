@@ -196,7 +196,7 @@ namespace BBBAPI2.Controllers
                 message = "Contacts Fetched",
                 data = JObject.Parse("{ 'userid': '" +  theContact.userid 
                     + "', 'name' : '" + theContact.User.firstname + " " + theContact.User.lastname 
-                    + "' , 'department' : '" + theContact.facultyid  //is this correct for department ?
+                    + "' , 'department' : '" + theContact.Faculty.facultyname
                     + "', 'position' : '" + theContact.position 
                     + "', 'email' : '" + theContact.User.email
                     + "', 'alternate' : '" + theContact.alternateemail 
