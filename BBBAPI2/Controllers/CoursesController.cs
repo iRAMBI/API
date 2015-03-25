@@ -60,11 +60,19 @@ namespace BBBAPI2.Controllers
                 var tuserid = from teacher in db.UserCourseSections
                              where teacher.role == "instructor" &&
                                    teacher.coursesectionid == cs.coursesectionid
-                             select teacher.User.userid;
+                             select teacher.User;
 
-                string teacherid = tuserid.FirstOrDefault() == null ? "" : tuserid.FirstOrDefault();
+                string teacherid = tuserid.FirstOrDefault() == null ? "" : tuserid.FirstOrDefault().userid;
 
-                dataString += "{ 'coursesectionid' : '" + cs.coursesectionid + "' , 'courseid' : '" + cs.courseid + "' , 'coursename' : '" + cs.Course.name + "' , 'teacherid' : '" + teacherid + "' , 'datetimestart' : '" + cs.datetimestart + "' , 'datetimeend' : '" + cs.datetimeend + "'},";
+                string teachername = tuserid.FirstOrDefault() == null ? "" : tuserid.FirstOrDefault().firstname + " " + tuserid.FirstOrDefault().lastname;
+
+                dataString += "{ 'coursesectionid' : '" + cs.coursesectionid 
+                    + "' , 'courseid' : '" + cs.courseid 
+                    + "' , 'coursename' : '" + cs.Course.name 
+                    + "' , 'teacherid' : '" + teacherid 
+                    + "' , 'teachername' : '" + teachername
+                    + "' , 'datetimestart' : '" + cs.datetimestart 
+                    + "' , 'datetimeend' : '" + cs.datetimeend + "'},";
             }
 
             if (courseSectionList.Count > 1)
