@@ -72,3 +72,11 @@ Body: There is no body content to send
 ####Get Postable Contacts
 Route: GET /api/contacts/:userid/postable/:token <br>
 Body: There is no body content to send
+####Post Search for Contacts
+Route: POST /api/contacts/:userid/search/:token
+Body: <br>
+````json
+{
+  "searchContent": String
+}
+````
