@@ -68,6 +68,7 @@ namespace BBBAPI2.Controllers
             //find all news belonging to this coursesection
             var result = from csn in db.News
                          where csn.coursesectionid == intcsid
+                         orderby csn.datetime ascending
                          select csn;
 
             List<News> courseSectionNewsList = result.ToList();
@@ -132,6 +133,7 @@ namespace BBBAPI2.Controllers
                          where (from users in db.Users
                                 where users.userid == userid
                                 select users.programid).Contains(articles.programid)
+                         orderby articles.datetime ascending
                          select articles;
 
             List<News> resultList = result.ToList();

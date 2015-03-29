@@ -20,7 +20,7 @@ namespace BBBAPI2.Controllers
 
 
         [HttpPost]
-        public IHttpActionResult GetSearchContact(string userid, string token, [FromBody] Search search)
+        public IHttpActionResult PostSearchContact(string userid, string token, [FromBody] Search search)
         {
             //validate token
             if (!TokenGenerator.ValidateToken(token, userid))
@@ -41,15 +41,15 @@ namespace BBBAPI2.Controllers
                                  where myucs.userid == userid 
                                  select myucs.coursesectionid).Contains(ucs.coursesectionid) 
                           && (ucs.User.firstname + " " + ucs.User.lastname).Contains(search.searchContent)
-                          select ucs.User;
+                          select ucs;
 
-            List<User> userList = results.ToList();
+            List<UserCourseSection> userList = results.ToList();
 
             string dataString = "[";
 
-            foreach (User singleUser in userList)
+            foreach (UserCourseSection singleUser in userList)
             {
-                dataString += "{ 'userid' : '" + singleUser.userid + "', 'name' : '" + singleUser.firstname + " " + singleUser.lastname + "' },";
+                dataString += "{ 'userid' : '" + singleUser.User.userid + "', 'name' : '" + singleUser.User.firstname + " " + singleUser.User.lastname + "', 'coursesectionid' : '" + singleUser.coursesectionid + "', 'coursename': '" + singleUser.CourseSection.Course.name + "' },";
             }
 
             dataString = dataString.Substring(0, dataString.Length - 1);
@@ -77,7 +77,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 403,
-                    message = "Invalid Token. GetContact"
+                    message = "Invalid Token. GetContact 2"
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
@@ -126,6 +126,7 @@ namespace BBBAPI2.Controllers
 
         }
 
+        [HttpGet]
         public IHttpActionResult GetSpecificContact(string userid, string contactid, string token)
         {
             //validate token
@@ -278,7 +279,7 @@ namespace BBBAPI2.Controllers
 
         }
 
-
+        /*
 
         // GET: api/Contact
         public IQueryable<User> GetUsers()
@@ -393,5 +394,6 @@ namespace BBBAPI2.Controllers
         {
             return db.Users.Count(e => e.userid == id) > 0;
         }
+         */
     }
 }
