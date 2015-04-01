@@ -205,6 +205,7 @@
     <Compile Include="Controllers\NewsController.cs" />
     <Compile Include="Controllers\TokenGenerator.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Controllers\Utils\InjectionCleaner.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

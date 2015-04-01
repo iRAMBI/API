@@ -28,7 +28,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 403,
-                    message = "Invalid Token. GetContact"
+                    message = "Invalid Token"
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
@@ -77,7 +77,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 403,
-                    message = "Invalid Token. GetContact 2"
+                    message = "Invalid Token."
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
@@ -107,7 +107,11 @@ namespace BBBAPI2.Controllers
 
             foreach (User singleUser in userList)
             {
-                dataString += "{ 'userid' : '" + singleUser.userid + "', 'name' : '" + singleUser.firstname + " " + singleUser.lastname + "' },";
+                //don't include ourselves in the list
+                if (singleUser.userid != userid)
+                {
+                    dataString += "{ 'userid' : '" + singleUser.userid + "', 'name' : '" + singleUser.firstname + " " + singleUser.lastname + "' },";
+                }
             }
 
             dataString = dataString.Substring(0, dataString.Length - 1);
@@ -141,53 +145,60 @@ namespace BBBAPI2.Controllers
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
             }
 
-            //get information about specific contact
+            //get information about specific contact, assuming a teacher
             var result = from contact in db.Teachers
                          where contact.userid == contactid
                          select contact;
 
             Teacher theContact = result.FirstOrDefault();
 
+            //if null then maybe its a student?
             if (theContact == null)
             {
-                JSONResponderClass error = new JSONResponderClass()
+
+                User aStudentUser = (from studentContact in db.Users
+                              where studentContact.userid == contactid
+                              select studentContact).FirstOrDefault();
+
+                //if there is no student then this is obviously not a contact
+                if (aStudentUser == null)
                 {
-                    statuscode = 404,
-                    message = "Contact Not Found"
-                };
+                    JSONResponderClass error = new JSONResponderClass()
+                    {
+                        statuscode = 404,
+                        message = "Contact Not Found"
+                    };
 
-                return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, error));
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.NotFound, error));
+                }
+                else
+                {
+                    //respond
+                    JSONResponderClass studentSuccess = new JSONResponderClass()
+                    {
+                        statuscode = 200,
+                        message = "Contacts Fetched",
+                        data = JObject.Parse("{ 'userid': '" + aStudentUser.userid
+                            + "', 'name' : '" + aStudentUser.firstname + " " + aStudentUser.lastname
+                            + "' , 'department' : '" + "null"
+                            + "', 'position' : '" + "Student"
+                            + "', 'email' : '" + aStudentUser.email
+                            + "', 'alternate' : '" + "null"
+                            + "', 'phone' : '" + aStudentUser.phonenumber
+                            + "', 'officelocation' : '" + "null"
+                            + "', 'officehours' : "
+                                + "{ 'monday' : '" + "null"
+                                + "', 'tuesday' : '" + "null"
+                                + "' , 'wednesday' : '" + "null"
+                                + "' , 'thursday' : '" + "null"
+                                + "' , 'friday' : '" + "null"
+                                + "'}"
+                            + "}")
+                    };
+
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, studentSuccess));
+                }               
             }
-
-           /* var resultucs = from ucs in db.UserCourseSections
-                            where ucs.userid == contactid
-                            select ucs;
-
-            List<UserCourseSection> csList = resultucs.ToList();
-            String dataString = "[";
-
-            foreach (UserCourseSection ucs in csList)
-            {
-
-                var tresult = from teacher in db.UserCourseSections
-                              where teacher.role == "Instructor" && teacher.coursesectionid == ucs.coursesectionid
-                              select teacher;
-
-                UserCourseSection tucs = tresult.FirstOrDefault();
-
-
-                dataString += "{ 'coursesectionid' : '" + ucs.coursesectionid 
-                    + "', 'courseid' : '" + ucs.CourseSection.courseid 
-                    + "', 'coursename': '" + ucs.CourseSection.Course.name 
-                    + "', 'datetimestart' : '" + ucs.CourseSection.datetimestart 
-                    + "', 'datetimeend' : '" + ucs.CourseSection.datetimeend 
-                    + "', 'teacherid' : '" + tucs.userid + "' },";
-            }
-
-
-
-            dataString = dataString.Substring(0, dataString.Length - 1);
-            dataString += "]";*/
 
 
             //respond
@@ -211,7 +222,6 @@ namespace BBBAPI2.Controllers
                         + "' , 'friday' : '" + theContact.ohfriday 
                         + "'}"
                     + "}" )
-                //data = resultList
             };
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));
@@ -227,7 +237,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 403,
-                    message = "Invalid Token. Here"
+                    message = "Invalid Token."
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
@@ -238,31 +248,14 @@ namespace BBBAPI2.Controllers
                            where ucs.userid == userid
                            select ucs;
 
-
-
-            //get all contacts in the same program as the user's id
-           /* var results = from users in db.Users
-                          where (from user in db.Users
-                                 where user.userid == userid
-                                 select user.programid).Contains(users.programid)
-                          orderby users.lastname ascending
-                          select users;*/
-
-           // List<User> userList = results.ToList();
-
             string dataString = "[";
 
             List<UserCourseSection> ucsList = results2.ToList();
 
             foreach (UserCourseSection ucsItem in ucsList)
             {
-                dataString += "{ 'coursesectionid' : '" + ucsItem.CourseSection.courseid + "', 'coursename' : '" + ucsItem.CourseSection.Course.name + "' },";
+                dataString += "{ 'coursesectionid' : '" + ucsItem.CourseSection.coursesectionid + "', 'coursename' : '" + ucsItem.CourseSection.Course.name + "' },";
             }
-
-           /* foreach (User singleUser in userList)
-            {
-                dataString += "{ 'userid' : '" + singleUser.userid + "', 'name' : '" + singleUser.firstname + " " + singleUser.lastname + "', 'coursesection' : '" + singleUser.UserCourseSections.ToList().ToString() + "' },";
-            }*/
 
             dataString = dataString.Substring(0, dataString.Length - 1);
             dataString += "]";
@@ -272,7 +265,6 @@ namespace BBBAPI2.Controllers
                 statuscode = 200,
                 message = "Postable Contacts Fetched",
                 data = JObject.Parse("{ 'coursesections': " + dataString + "}")
-                //data = resultList
             };
 
             return ResponseMessage(Request.CreateResponse(HttpStatusCode.OK, success));

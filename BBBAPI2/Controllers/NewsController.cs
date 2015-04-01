@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using BBBAPI2.Models;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
+using BBBAPI2.Controllers.Utils;
 
 namespace BBBAPI2.Controllers
 {
@@ -68,6 +69,7 @@ namespace BBBAPI2.Controllers
             //find all news belonging to this coursesection
             var result = from csn in db.News
                          where csn.coursesectionid == intcsid
+                         && (csn.priority != "critical" || csn.priority != "Critical")
                          orderby csn.datetime ascending
                          select csn;
 
@@ -120,7 +122,7 @@ namespace BBBAPI2.Controllers
                 JSONResponderClass error = new JSONResponderClass()
                 {
                     statuscode = 403,
-                    message = "Invalid Token"
+                    message = "Invalid Token. Standard News"
                 };
 
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
@@ -131,9 +133,9 @@ namespace BBBAPI2.Controllers
             //gets all articles that match the user's programid
             var result = from articles in db.News
                          where (from users in db.Users
-                                where users.userid == userid
+                                where users.userid.Equals(userid)
                                 select users.programid).Contains(articles.programid)
-                         orderby articles.datetime ascending
+                        orderby articles.datetime ascending
                          select articles;
 
             List<News> resultList = result.ToList();
@@ -168,7 +170,8 @@ namespace BBBAPI2.Controllers
                     + "', 'datetime' : '" + article.datetime
                     + "', 'title' : '" + article.title 
                     + "', 'content' : '" + article.content 
-                    + "', 'numcomments' : " + article.Comments.Count + "},";
+                    + "', 'numcomments' : '" + article.Comments.Count 
+                    + "' },";
             }
 
             dataString = dataString.Substring(0, dataString.Length - 1);
@@ -215,6 +218,10 @@ namespace BBBAPI2.Controllers
             string dataString = "[";
 
             foreach(var article in resultList){
+                if (article.expirydate < DateTime.Now)
+                {
+                    continue;
+                }
                 dataString += "{ 'newsid': '" + article.newsid + "', 'userid' : '" + article.userid + "', 'title' : '" + article.title + "', 'content' : '" + article.content + "'},";
             }
 
@@ -339,6 +346,7 @@ namespace BBBAPI2.Controllers
 
             body.datetime = DateTime.Now;
             body.userid = userid;
+            body.content = InjectionCleaner.cleanString(body.content);
 
             //if there is no newsid or the newsid in the body does not match the parameter
             //we will use the parameter passed one
@@ -377,10 +385,35 @@ namespace BBBAPI2.Controllers
                 return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
             }
 
+            //if the article is critical, make sure this is only going to the all group
+            if (body.priority.Equals("Critical") || body.priority.Equals("critical"))
+            {
+
+                CourseSection cs = (from courseSection in db.CourseSections
+                              where courseSection.Course.name == "ALL"
+                              && courseSection.coursesectionid == body.coursesectionid
+                              select courseSection).FirstOrDefault();
+
+                if (cs == null)
+                {
+                    JSONResponderClass error = new JSONResponderClass()
+                    {
+                        statuscode = 403,
+                        message = "Invalid Course Section for Critical News"
+                    };
+
+                    return ResponseMessage(Request.CreateResponse(HttpStatusCode.Forbidden, error));
+                }
+
+
+            }
+
             //formalize data with any missing content
             body.userid = userid;
             body.datetime = DateTime.Now;
             body.active = true;
+            body.title = InjectionCleaner.cleanString(body.title);
+            body.content = InjectionCleaner.cleanString(body.content);
 
             //get the program id belonging to the coursesectionid
             var result = (from ucs in db.UserCourseSections
