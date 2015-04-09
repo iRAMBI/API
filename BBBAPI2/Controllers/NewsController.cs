@@ -12,6 +12,8 @@ using BBBAPI2.Models;
 using Newtonsoft.Json.Linq;
 using System.Diagnostics;
 using BBBAPI2.Controllers.Utils;
+using Microsoft.AspNet.SignalR;
+using BBBAPI2.Hubs;
 
 namespace BBBAPI2.Controllers
 {
@@ -135,7 +137,7 @@ namespace BBBAPI2.Controllers
                          where (from users in db.Users
                                 where users.userid.Equals(userid)
                                 select users.programid).Contains(articles.programid)
-                        orderby articles.datetime ascending
+                        orderby articles.datetime descending
                          select articles;
 
             List<News> resultList = result.ToList();
@@ -454,6 +456,11 @@ namespace BBBAPI2.Controllers
             db.News.Add(body);
             db.SaveChanges();
 
+
+            //inform web clients
+            NewsfeedHub.triggerNews();
+
+            //send a response
             JSONResponderClass success = new JSONResponderClass()
             {
                 statuscode = 201,

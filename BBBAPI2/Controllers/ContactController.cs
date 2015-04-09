@@ -180,18 +180,18 @@ namespace BBBAPI2.Controllers
                         message = "Contacts Fetched",
                         data = JObject.Parse("{ 'userid': '" + aStudentUser.userid
                             + "', 'name' : '" + aStudentUser.firstname + " " + aStudentUser.lastname
-                            + "' , 'department' : '" + "null"
+                            + "' , 'department' : '" + ""
                             + "', 'position' : '" + "Student"
                             + "', 'email' : '" + aStudentUser.email
-                            + "', 'alternate' : '" + "null"
+                            + "', 'alternate' : '" + ""
                             + "', 'phone' : '" + aStudentUser.phonenumber
-                            + "', 'officelocation' : '" + "null"
+                            + "', 'officelocation' : '" + ""
                             + "', 'officehours' : "
-                                + "{ 'monday' : '" + "null"
-                                + "', 'tuesday' : '" + "null"
-                                + "' , 'wednesday' : '" + "null"
-                                + "' , 'thursday' : '" + "null"
-                                + "' , 'friday' : '" + "null"
+                                + "{ 'monday' : '" + ""
+                                + "', 'tuesday' : '" + ""
+                                + "' , 'wednesday' : '" + ""
+                                + "' , 'thursday' : '" + ""
+                                + "' , 'friday' : '" + ""
                                 + "'}"
                             + "}")
                     };

@@ -80,10 +80,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2015 18:38:30</publishTime>
     </File>
     <File Include="bin/BBBAPI2.dll">
-      <publishTime>03/31/2015 20:15:02</publishTime>
+      <publishTime>04/01/2015 21:47:53</publishTime>
     </File>
     <File Include="bin/BBBAPI2.pdb">
-      <publishTime>03/31/2015 20:15:01</publishTime>
+      <publishTime>04/01/2015 21:47:53</publishTime>
     </File>
     <File Include="bin/EntityFramework.dll">
       <publishTime>01/25/2015 18:38:47</publishTime>
@@ -137,13 +137,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2015 18:39:07</publishTime>
     </File>
     <File Include="bin/System.Net.Http.Formatting.dll">
-      <publishTime>01/25/2015 18:38:21</publishTime>
+      <publishTime>04/01/2015 21:46:34</publishTime>
+    </File>
+    <File Include="bin/System.Web.Cors.dll">
+      <publishTime>04/01/2015 21:46:35</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>01/25/2015 18:38:19</publishTime>
     </File>
+    <File Include="bin/System.Web.Http.Cors.dll">
+      <publishTime>04/01/2015 21:46:35</publishTime>
+    </File>
     <File Include="bin/System.Web.Http.dll">
-      <publishTime>01/25/2015 18:38:21</publishTime>
+      <publishTime>04/01/2015 21:46:34</publishTime>
     </File>
     <File Include="bin/System.Web.Http.Owin.dll">
       <publishTime>01/25/2015 18:39:10</publishTime>
@@ -203,7 +209,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>02/15/2015 14:19:44</publishTime>
     </File>
     <File Include="packages.config">
-      <publishTime>01/25/2015 18:39:10</publishTime>
+      <publishTime>04/01/2015 21:46:47</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
       <publishTime>01/25/2015 18:37:44</publishTime>
@@ -260,7 +266,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/25/2015 18:37:03</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>03/31/2015 20:15:22</publishTime>
+      <publishTime>04/01/2015 21:47:57</publishTime>
     </File>
   </ItemGroup>
 </Project>
