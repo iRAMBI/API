@@ -227,7 +227,10 @@ namespace BBBAPI2.Controllers
                 dataString += "{ 'newsid': '" + article.newsid + "', 'userid' : '" + article.userid + "', 'title' : '" + article.title + "', 'content' : '" + article.content + "'},";
             }
 
-            dataString = dataString.Substring(0, dataString.Length - 1);
+            if (!dataString.Equals("["))
+            {
+                dataString = dataString.Substring(0, dataString.Length - 1);
+            }
             dataString += "]";
 
             
