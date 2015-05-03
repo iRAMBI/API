@@ -7,6 +7,13 @@ api.thunderchicken.ca/
 
 -note if this route is not working try using api.thunderchicken.ca:8080
 
+#Setup
+ 1. Download the repo. Load it into VS. Build the project. You will need to configure your connections to your database and generate a Web.config file
+ 2. In App_Data is a build script. run it in MSSQL to load your database. The script needs a user named ben and alan to work correctly. Add them as users with read / write / update / delete access to the DB.
+ 3. You may need to create a user that is both a windows authenticated user in MSSQL and a ApplicationPool user in IIS depending on your configuration setup. The project was last setup with the DB being localhost so assume any set settings in the project are expecting that
+
+
+
 #Routes Reference
 See oneNote For Full Documentation
 
